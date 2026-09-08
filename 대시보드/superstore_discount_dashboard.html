@@ -52,7 +52,13 @@ body{
 /* ---------- header ---------- */
 .hd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
 .hd h1{font-size:21px;font-weight:650;letter-spacing:-.01em}
-.hd .sub{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.hd .aud{font-size:12.5px;color:var(--ink-2);margin-top:6px;display:flex;
+  align-items:flex-start;gap:7px;line-height:1.55;max-width:62ch}
+.hd .aud b{color:var(--ink);font-weight:600}
+.hd .aud .tag{margin-top:1px}
+.tag{background:var(--pos);color:#fff;font-size:11px;font-weight:650;letter-spacing:.02em;
+  padding:2px 9px;border-radius:99px;flex:none}
+.hd .sub{font-size:12px;color:var(--ink-3);margin-top:5px}
 .hd .sub b{color:var(--ink);font-weight:600}
 .tgl{border:1px solid var(--ring);background:var(--surface);color:var(--ink-2);
   border-radius:99px;padding:6px 13px;font:inherit;font-size:12px;cursor:pointer}
@@ -60,7 +66,10 @@ body{
 
 /* ---------- filters ---------- */
 .fbar{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);
-  padding:11px 14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:var(--gap)}
+  padding:11px 14px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:var(--gap);
+  position:sticky;top:0;z-index:30;box-shadow:0 2px 10px rgba(0,0,0,.055)}
+/* 필터 바가 좁은 화면에서 3~4줄로 접히면 고정이 화면을 너무 먹으므로 해제 */
+@media (max-width:820px){ .fbar{position:static;box-shadow:none} }
 .fg{display:flex;align-items:center;gap:7px}
 .fg label{font-size:11.5px;color:var(--ink-3);letter-spacing:.02em}
 .fg select{font:inherit;font-size:12.5px;padding:5px 26px 5px 9px;border:1px solid var(--axis);
@@ -69,7 +78,10 @@ body{
   background-position:calc(100% - 14px) 52%,calc(100% - 9px) 52%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
 .fg select:focus-visible{outline:2px solid var(--pos);outline-offset:1px}
 .fbar .spacer{flex:1}
-.fbar .cnt{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.fbar .cnt{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums;
+  display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.fbar .cnt b{color:var(--ink);font-weight:650;font-size:12.5px}
+.fbar .cnt .sep{color:var(--axis)}
 .reset{border:1px solid var(--axis);background:transparent;color:var(--ink-2);border-radius:6px;
   padding:5px 11px;font:inherit;font-size:12px;cursor:pointer}
 .reset:hover{color:var(--ink);border-color:var(--ink-3)}
@@ -142,7 +154,13 @@ details.guide > summary:hover{color:var(--ink)}
 .row.b{grid-template-columns:1fr 1fr;align-items:start}
 .card{background:var(--surface);border:1px solid var(--ring);border-radius:var(--r);padding:15px 17px 17px;min-width:0}
 .card h3{font-size:13.5px;font-weight:640;letter-spacing:-.005em}
-.card .q{font-size:11.5px;color:var(--ink-3);margin-top:2px}
+.card .q{font-size:11.5px;color:var(--ink-3);margin-top:2px;display:flex;align-items:center;
+  gap:10px;flex-wrap:wrap;justify-content:space-between}
+.chk{display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:var(--ink-2);
+  border:1px solid var(--axis);border-radius:99px;padding:3px 10px;font-size:11.5px;user-select:none}
+.chk:hover{color:var(--ink);border-color:var(--ink-3)}
+.chk input{margin:0;cursor:pointer;accent-color:var(--pos)}
+.chk:has(input:checked){border-color:var(--pos);color:var(--pos)}
 .card .body{margin-top:13px}
 svg{display:block;width:100%;overflow:visible}
 .ax{font-size:10.5px;fill:var(--ink-3);font-variant-numeric:tabular-nums}
@@ -233,6 +251,7 @@ footer dl{display:flex;gap:5px}footer dt{color:var(--ink-2)}
   <div class="hd">
     <div>
       <h1>할인 정책 수익성 진단</h1>
+      <div class="aud"><span class="tag">영업팀</span><span><b>할인 상한을 정하는 결정 하나</b>를 위한 분석형 대시보드 — 지역 매니저 4명과 상품 담당자가 함께 봅니다</span></div>
       <div class="sub">
         분석 범위 <b>미국</b> · <b>2023–2026</b> (4년, 9,994 주문라인) ·
         데이터 기준일 <b>2026-12-30</b> · 출처 Tableau Sample — Superstore
@@ -257,6 +276,11 @@ footer dl{display:flex;gap:5px}footer dt{color:var(--ink-2)}
     <summary>이 화면 읽는 법 — 결정 지도 · 읽는 순서 · 화면 상태 (처음 보는 사람용)</summary>
     <div class="gbody">
       <div>
+        <h4>주 사용자</h4>
+        <p style="font-size:12.5px;color:var(--ink-2);margin-bottom:12px">
+          <b style="color:var(--ink)">영업팀 (영업 총괄)</b> — 이 화면을 열어 쓰는 사람은 한 명입니다.
+          지역 매니저와 상품 담당자는 정해진 정책을 자기 영역에 적용할 때 같은 화면에서 근거를 찾고,
+          경영진은 화면이 아니라 <b style="color:var(--ink)">회수 가능 이익 숫자만</b> 보고받습니다.</p>
         <h4>결정 지도 — 이 지표가 지원하는 결정</h4>
         <table>
           <thead><tr><th>지표</th><th>지원하는 결정</th><th>필요한 사람</th></tr></thead>
@@ -264,7 +288,7 @@ footer dl{display:flex;gap:5px}footer dt{color:var(--ink-2)}
             <tr><td>할인 구간별 이익률</td><td>할인 상한을 20%로 둘 것인가</td><td>영업 총괄</td></tr>
             <tr><td>하위카테고리 × 할인 이익</td><td>Tables · Machines · Binders 고할인 금지 여부</td><td>상품 담당자</td></tr>
             <tr><td>주별 할인율 ↔ 이익률</td><td>Texas · Ohio · Pennsylvania · Illinois 개입 여부</td><td>지역 매니저</td></tr>
-            <tr><td>회수 가능 이익</td><td>정책 변경의 기대효과 보고</td><td>경영진</td></tr>
+            <tr><td>회수 가능 이익</td><td>정책 변경의 기대효과 보고</td><td>경영진 <i style="color:var(--ink-3);font-style:normal">(보고 대상)</i></td></tr>
             <tr><td>월별 매출 · 이익</td><td>시행 시점 (11월 성수기 이전)</td><td>영업 총괄</td></tr>
           </tbody>
         </table>
@@ -321,7 +345,7 @@ footer dl{display:flex;gap:5px}footer dt{color:var(--ink-2)}
       <div class="lg">
         <span><i style="background:var(--pos)"></i><span class="lgt p"></span>흑자</span>
         <span><i style="background:var(--neg)"></i><span class="lgt n"></span>적자</span>
-        <span style="color:var(--ink-3)">막대 = 이익률 · 괄호 = 해당 구간의 적자 주문라인 비율</span>
+        <span style="color:var(--ink-3)">막대 = 이익률 · 라벨 = 적자율과 해당 구간의 매출 규모</span>
       </div>
     </div>
     <div class="card">
@@ -365,7 +389,9 @@ footer dl{display:flex;gap:5px}footer dt{color:var(--ink-2)}
 
   <div class="card">
     <h3>⑤ 조치 우선순위 — 하위카테고리 × 지역</h3>
-    <div class="q">Q3 · 조치 → 무엇부터 손댈 것인가. 열 제목을 눌러 정렬</div>
+    <div class="q">Q3 · 조치 → 무엇부터 손댈 것인가. 열 제목을 눌러 정렬
+      <label class="chk"><input type="checkbox" id="p1only"> P1 조치만 보기</label>
+    </div>
     <div class="body tbl-wrap" id="c5"></div>
     <div class="tnote" id="c5n"></div>
   </div>
@@ -512,6 +538,9 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
 
   // 텍스처(무늬) 백업 채널 — 색이 실패하는 경우를 위한 두 번째 채널.
   // 흑백 인쇄와 forced-colors 에서는 CSS 미디어 쿼리가 자동으로 켠다.
+  var p1Box = document.getElementById('p1only');
+  p1Box.addEventListener('change', function () { P1ONLY = p1Box.checked; render(); });
+
   var texBtn = document.getElementById('tex');
   texBtn.addEventListener('click', function () {
     var on = document.body.classList.toggle('tex');
@@ -553,7 +582,8 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
     var vis = g.map(function (a, i) { return { a: a, b: BINS[i] }; }).filter(function (o) { return o.a.n > 0; });
     if (!vis.length) { host.innerHTML = EMPTY; return; }
 
-    var w = W(host), padL = 118, padR = 62, rowH = 36, hBar = 20;
+    var w = W(host), padL = 122, padR = 62, rowH = 48, hBar = 20;
+    var totSales = rows.reduce(function (a, r) { return a + r[SA]; }, 0);
     var h = vis.length * rowH + 26;
     var vals = vis.map(function (o) { return o.a.margin; });
     var lo = Math.min(0, Math.min.apply(null, vals)), hi = Math.max(0, Math.max.apply(null, vals));
@@ -570,8 +600,12 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
     vis.forEach(function (o, i) {
       var y = 8 + i * rowH, yb = y + (rowH - 8 - hBar) / 2, m = o.a.margin, x1 = X(m);
       var col = m < 0 ? 'var(--neg)' : 'var(--pos)';
-      s += '<text class="axl" x="' + (padL - 10) + '" y="' + (yb + 8) + '" text-anchor="end">' + o.b.k + '</text>';
-      s += '<text class="dlm" x="' + (padL - 10) + '" y="' + (yb + 21) + '" text-anchor="end">적자율 ' + pct(o.a.lossRate, 0) + '</text>';
+      // 라벨 3줄을 막대 중심에 맞춰 쌓는다 — 이익률만 보면 규모를 놓치기 때문에 매출 비중까지 표기
+      var cy = yb + hBar / 2, lx0 = padL - 10;
+      s += '<text class="axl" x="' + lx0 + '" y="' + (cy - 8) + '" text-anchor="end">' + o.b.k + '</text>';
+      s += '<text class="dlm" x="' + lx0 + '" y="' + (cy + 4) + '" text-anchor="end">적자율 ' + pct(o.a.lossRate, 0) + '</text>';
+      s += '<text class="dlm" x="' + lx0 + '" y="' + (cy + 15) + '" text-anchor="end">' + usd(o.a.sales) +
+        ' · ' + pct(totSales ? o.a.sales / totSales * 100 : 0, 1) + '</text>';
       var pth = barH(x0, x1, yb, hBar);
       s += '<path d="' + pth + '" fill="' + col + '"/>';
       s += '<path class="texlayer" d="' + pth + '" fill="url(#' + (m < 0 ? 'hxneg' : 'hxpos') + ')"/>';
@@ -771,6 +805,7 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
 
   /* ── ⑤ 조치 우선순위 테이블 ─────────────────────────────── */
   var SORT = { col: 'profit', dir: 'asc' };
+  var P1ONLY = false;
   function verdict(g) {
     if (g.profit < 0) return { p: 1, cls: 'p1', txt: 'P1 조치 · ' + (g.avgDisc > 25 ? '할인 상한' : '원가·믹스 검토') };
     if (g.margin < 5) return { p: 2, cls: 'p2', txt: 'P2 관찰' };
@@ -778,12 +813,18 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
   }
   function c5(rows, host, note) {
     if (!rows.length) { host.innerHTML = EMPTY; note.textContent = ''; return; }
-    var gs = groupBy(rows, function (r) { return r[SU] + '|' + r[RG]; });
-    gs.forEach(function (g) {
+    var gsAll = groupBy(rows, function (r) { return r[SU] + '|' + r[RG]; });
+    gsAll.forEach(function (g) {
       var p = g.key.split('|');
       g.sub = M.subs[+p[0]]; g.reg = M.regions[+p[1]];
       g.v = verdict(g);
     });
+    var gs = P1ONLY ? gsAll.filter(function (g) { return g.v.p === 1; }) : gsAll;
+    if (!gs.length) {
+      host.innerHTML = '<div class="empty"><b>P1 조치 대상이 없습니다</b>' +
+        '이 조건에서는 이익이 마이너스인 조합이 없습니다. 「P1 조치만 보기」를 해제하면 전체가 보입니다.</div>';
+      note.textContent = ''; return;
+    }
     var COLS = [
       { f: 'sub', l: '하위카테고리' }, { f: 'reg', l: '지역' },
       { f: 'n', l: '주문라인', n: 1 }, { f: 'sales', l: '매출', n: 1 },
@@ -820,10 +861,12 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
         c5(rows, host, note);
       });
     });
-    var p1 = gs.filter(function (g) { return g.v.p === 1; }), p2 = gs.filter(function (g) { return g.v.p === 2; });
-    note.innerHTML = '조합 ' + num(gs.length) + '개 중 <b style="color:var(--crit)">P1 조치 ' + p1.length + '개</b>' +
+    var p1 = gsAll.filter(function (g) { return g.v.p === 1; });
+    var p2 = gsAll.filter(function (g) { return g.v.p === 2; });
+    note.innerHTML = (P1ONLY ? '<b style="color:var(--crit)">P1 ' + p1.length + '개만 표시 중</b> · ' : '') +
+      '조합 ' + num(gsAll.length) + '개 중 <b style="color:var(--crit)">P1 조치 ' + p1.length + '개</b>' +
       ' (합산 손실 ' + usdFull(p1.reduce(function (a, g) { return a + g.profit; }, 0)) + ') · P2 관찰 ' + p2.length + '개 · 유지 ' +
-      (gs.length - p1.length - p2.length) + '개. ' +
+      (gsAll.length - p1.length - p2.length) + '개. ' +
       'P1 판정 = 이익 &lt; 0 · P2 = 이익률 &lt; 5% · 조치 유형은 평균 할인 25% 초과 여부로 구분';
   }
 
@@ -901,9 +944,12 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
           '</b> · 해당 구간 적자율 ' + pct(risk.lossRate, 0) + '</span>'
         : '<span style="color:var(--up)">이 조건에서는 고할인 구간 손실이 없습니다</span>');
 
-    document.getElementById('cnt').textContent =
-      '필터 결과 ' + num(rows.length) + '행 / 전체 ' + num(M.nRows) + '행' +
-      (rows.length ? ' · 이익 ' + usdFull(all.profit) : '');
+    // 스크롤해도 따라오는 바이므로 핵심 숫자 2개를 함께 표시한다
+    document.getElementById('cnt').innerHTML = !all.n
+      ? '<span>해당 주문 없음</span>'
+      : '<span>이익률 <b>' + pct(all.margin) + '</b></span><span class="sep">·</span>' +
+        '<span>회수 가능 <b>' + usd(rec) + '</b></span><span class="sep">·</span>' +
+        '<span>' + num(rows.length) + ' / ' + num(M.nRows) + '행</span>';
   }
 
   /* ── 렌더 ───────────────────────────────────────────────── */
