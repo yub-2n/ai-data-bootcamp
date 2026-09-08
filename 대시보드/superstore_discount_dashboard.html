@@ -84,9 +84,7 @@ body{
 .kpi .ctx{font-size:12px;color:var(--ink-2);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .kpi .ctx .up{color:var(--up);font-weight:600}
 .kpi .ctx .dn{color:var(--crit);font-weight:600}
-.meter{height:7px;border-radius:99px;background:var(--pos-100);margin:8px 0 7px;position:relative;overflow:hidden}
-.meter i{display:block;height:100%;border-radius:99px;background:var(--pos-450)}
-.meter .tk{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);border-radius:2px}
+.cnote{font-size:11px;color:var(--ink-3);margin-top:9px;line-height:1.45}
 .tip-i{width:13px;height:13px;border-radius:99px;border:1px solid var(--axis);color:var(--ink-3);
   font-size:9px;line-height:11px;text-align:center;cursor:help;flex:none}
 
@@ -421,7 +419,6 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
     TT.style.left = Math.max(8, x) + 'px'; TT.style.top = Math.max(8, y) + 'px';
   }
   function tipOff() { TT.style.opacity = '0'; }
-  function row(k, v) { return '<div class="r"><span>' + k + '</span><span>' + v + '</span></div>'; }
   document.addEventListener('mouseover', function (e) {
     var t = e.target.closest('[data-tip]'); if (t) tipOn(e, esc(t.getAttribute('data-tip')));
   });
@@ -433,7 +430,7 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
   });
 
   /* ── 집계 ───────────────────────────────────────────────── */
-  function blank() { return { n: 0, sales: 0, profit: 0, loss: 0, disc: 0, qty: 0 }; }
+  function blank() { return { n: 0, sales: 0, profit: 0, loss: 0, disc: 0 }; }
   function add(a, r) {
     a.n++; a.sales += r[SA]; a.profit += r[PR]; a.disc += r[DI];
     if (r[PR] < 0) a.loss++; return a;
@@ -469,7 +466,8 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
                { k: '1–20%', t: function (d) { return d > 0 && d <= 20; } },
                { k: '20% 초과', t: function (d) { return d > 20; } }];
 
-  var RISK = 20; // 손실 위험 기준: 할인 20% 초과
+  var RISK = 20;   // 손실 위험 기준: 할인 20% 초과
+  var MIN_N = 5;   // ② 산점도에 표시할 최소 표본(주문 라인) 수 — EDA 노트북과 동일 기준
 
   /* ── 필터 ───────────────────────────────────────────────── */
   var F = { y: 'all', r: 'all', c: 'all', s: 'all' };
@@ -599,7 +597,8 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
   /* ── ② 주별 할인율 ↔ 이익률 산점도 ──────────────────────── */
   function c2(rows, host) {
     if (!rows.length) { host.innerHTML = EMPTY; return; }
-    var gs = groupBy(rows, function (r) { return r[ST]; }).filter(function (g) { return g.n >= 5; });
+    var allSt = groupBy(rows, function (r) { return r[ST]; });
+    var gs = allSt.filter(function (g) { return g.n >= MIN_N; });
     if (!gs.length) { host.innerHTML = EMPTY; return; }
 
     var w = W(host), padL = 46, padR = 16, padT = 12, padB = 34, h = 262;
@@ -662,7 +661,10 @@ const DB={"meta":{"years":[2023,2024,2025,2026],"regions":["Central","East","Sou
         ' · 이익률 ' + pct(g.margin) + ' · 평균 할인 ' + pct(g.avgDisc) + ' · 적자율 ' + pct(g.lossRate) +
         ' · 주문라인 ' + num(g.n) + '건"/>';
     });
-    host.innerHTML = s + '</svg>';
+    var cut = allSt.length - gs.length;
+    host.innerHTML = s + '</svg><div class="cnote">주 ' + num(allSt.length) + '개 중 ' +
+      num(gs.length) + '개 표시 — 표본 ' + MIN_N + ' 라인 미만 ' + num(cut) +
+      '개는 이익률이 불안정해 제외했습니다' + (cut ? '' : ' (제외 없음)') + '</div>';
   }
 
   /* ── ③ 하위카테고리 × 할인구간 히트맵 ───────────────────── */
