@@ -8,6 +8,7 @@
 - **데이터셋:** Health Supplements — Flipkart (2022-04-02 수집)
 - **출처 URL:** https://www.kaggle.com/datasets/jithinanievarghese/popular-health-supplements-flipkart 사이트에서 zip파일 다운 후 압축 풀면 csv파일 나옴.
 - **노트북을 실행하려면 Kaggle에서 받은 원본 csv를 D009/ 폴더에 넣어 주세요.** (데이터 파일은 저장소에 올리지 않았습니다.)
+- **결과 저장 위치:** 노트북을 실행하면 `D009/outputs/` 폴더가 자동으로 만들어져 결과 파일이 저장됩니다. (결과 파일은 저장소에 올리지 않았습니다.)
 - **관측 단위:** 한 행 = 상품 1개 (Flipkart에 올라온 건강보조제 리스팅 하나)
 - **규모:** 원본 3,076행 → 정제 후 2,423행, 23개 컬럼(파생 3개 포함)
 - **카테고리:** 비타민 · 단백질 · 밀크드링크 · 에너지드링크 · 유산균 5종
