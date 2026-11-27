@@ -69,5 +69,5 @@ ai-data-bootcamp/
 |---|---|---|---|---|
 | Olist 배송 지연·리뷰 분석 | 배송 지연이 리뷰 점수에 미치는 영향, 지연이 생기는 배송 단계 | ML 프로젝트 (4인 팀) | pandas, SciPy, statsmodels, scikit-learn | [01_olist-delivery-review](projects/01_olist-delivery-review/) |
 | Olist 셀러 유치 전략 대시보드 | 어떤 셀러를 유치해야 실제 판매(활성화)로 이어지는가 | 대시보드 프로젝트 (4인 팀) | pandas, SciPy, scikit-learn, HTML/JS | [02_olist-seller-acquisition-dashboard](projects/02_olist-seller-acquisition-dashboard/) |
-| 궁·능 관람객 예측과 인력 배치 | 운영 정보를 더할 때 예측 정확도·인력 비용이 얼마나 줄어드는가(FVA) | 시계열 분석보고서 (팀) | pandas, Chronos-2, 부트스트랩 | [03_timeseries-forecast-report](projects/03_timeseries-forecast-report/) |
+| 궁·능 관람객 예측과 인력 배치 | 운영 정보를 더할 때 예측 정확도·인력 비용이 얼마나 줄어드는가(FVA) | 시계열 분석보고서 (4인 팀) | pandas, Chronos-2, 부트스트랩 | [03_timeseries-forecast-report](projects/03_timeseries-forecast-report/) |
 | 약관 난이도와 보험금 분쟁 결과 | 어려운 약관 조항이 분쟁 결과(인용)와 관련 있는가 | 보험 CX 프로젝트 (3인 팀) | statsmodels, kiwipiepy, BERTopic, Claude Code 에이전트, HTML/JS | [04_insurance-cx-terms-difficulty](projects/04_insurance-cx-terms-difficulty/) |
