@@ -1,0 +1,37 @@
+Colab 실행 순서 (v7, 런타임: GPU T4). 아래 단계를 위에서부터 순서대로, 각 셀에 하나씩.
+공통: 이 폴더(colab_v7)의 파일을 모두 Colab 같은 폴더(/content/colab_v7)에 올린다. 옵션은 한 글자도 바꾸지 말 것.
+원점은 정기 78개(2024-07-02~2025-12-23) + 명절 4개 = 82개이며 스크립트 안에서 자동 생성·검증된다(78개가 아니면 중단).
+v6의 Chronos 결과는 쓰지 않는다: 82개 원점을 모두 새로 실행한다(겹치는 30개 원점은 나중에 v6와 비교).
+
+[0] 준비
+!pip install -q "chronos-forecasting>=2.0" pandas pyarrow
+%cd /content/colab_v7
+
+[0-1] (권장) 시간 측정: 원점 1개만 먼저 돌려 걸리는 시간을 본다. 출력의 'Ns' 값 × 82 ≈ 한 번 실행 시간.
+!python 05b_run_chronos_colab_v7.py --level series --lag A --rows 3,4,5,6,7 --start 2023-01-01 --notice --origin 2025-12-23 --out test_one.parquet
+
+[1] A 백테스트 (원점 82개 x 3~7행)       -> chronos_series_A_v7.parquet
+!python 05b_run_chronos_colab_v7.py --level series --lag A --rows 3,4,5,6,7 --start 2023-01-01 --notice --out chronos_series_A_v7.parquet
+
+[2] B 백테스트 (원점 82개 x 3~7행)       -> chronos_series_B_v7.parquet
+!python 05b_run_chronos_colab_v7.py --level series --lag B --rows 3,4,5,6,7 --start 2023-01-01 --notice --out chronos_series_B_v7.parquet
+
+[3] 권고표용: A, 7행, 원점 2026-01-01    -> chronos_series_A_v7_o2026-01-01.parquet
+!python 05b_run_chronos_colab_v7.py --level series --lag A --rows 7 --start 2023-01-01 --notice --origin 2026-01-01 --cal cal_2026.csv --out chronos_series_A_v7_o2026-01-01.parquet
+
+[4] (맨 마지막) 재현성 확인: [3]과 똑같은 명령을 한 번 더, 출력 이름만 다르게
+!python 05b_run_chronos_colab_v7.py --level series --lag A --rows 7 --start 2023-01-01 --notice --origin 2026-01-01 --cal cal_2026.csv --out chronos_series_A_v7_o2026-01-01_rerun.parquet
+
+[5] 내려받을 파일 4개 (이것만 올려주면 됨)
+ chronos_series_A_v7.parquet
+ chronos_series_B_v7.parquet
+ chronos_series_A_v7_o2026-01-01.parquet
+ chronos_series_A_v7_o2026-01-01_rerun.parquet
+ (+ 각 실행 끝에 찍히는 '버전:' 줄 4개를 복사해서 알려주기)
+
+돌리지 않는 것: B 민감도(--strict-fh), 개소별 직접(--level site), B 권고표, 학습 기간 비교(--mask), 휴관규칙 추가.
+주의: free_events_v7.csv 는 이전 행사 파일(무료개방일_행사_최종.csv)이 아니다. 스크립트가 이전 파일의 해시를 감지하면 중단한다.
+
+[6] (추가, 위 [1]~[4]를 끝낸 뒤) 공지 시점 엄격 기준 민감도: 공지가 확정 시점보다 하루 늦은 2개 원점만 6·7행 재예측
+!python 05b_run_chronos_colab_v7.py --level series --lag A --rows 6,7 --start 2023-01-01 --notice --strict-fh --origin 2024-09-10,2025-01-21 --out chronos_series_A_v7_strictfh.parquet 2>&1 | tee strict.log
+ -> 내려받을 파일: chronos_series_A_v7_strictfh.parquet (기대: 252행 = 2원점 × 2행 × 63, 15열)
