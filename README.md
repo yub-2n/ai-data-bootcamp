@@ -7,7 +7,7 @@
 | 프로젝트 | 질문 | 핵심 결과 | 결과물 |
 |---|---|---|---|
 | [약관 난이도와 보험금 분쟁 결과](projects/04_insurance-cx-terms-difficulty/)<br>보험 CX · 3인 팀 | 어떤 약관 조항부터 쉽게 고쳐 쓸까? | 분쟁의 46%가 '보험금 지급사유' 조항에 집중, 난이도와 결과의 연관은 불확실 → 해당 조항부터 시험 개선 권고 | [▶ 대시보드](https://yub-2n.github.io/ai-data-bootcamp/projects/04_insurance-cx-terms-difficulty/dashboard/) |
-| [비 한 번에 놓치는 외지인 매출](projects/05_bigcontest-climate-commerce/)<br>빅콘테스트 · 3인 팀 | 큰비가 오면 관광 상권 매출은 얼마나 줄고, 다시 돌아올까? | 30mm 호우일 춘천 외지인 결제 **−21.5%**, 5일 뒤에도 하루치의 48.3% 미회복(비 한 번에 약 7억 원, 최소 추정) → 30mm 날씨지수 보험 제안 | 분석 노트북·코드 |
+| [비 한 번에 놓치는 외지인 매출](projects/05_bigcontest-climate-commerce/)<br>빅콘테스트 · 3인 팀 | 큰비가 오면 관광 상권 매출은 얼마나 줄고, 다시 돌아올까? | 30mm 호우일 춘천 외지인 결제 **−21.5%**, 5일 뒤에도 하루치의 48.3% 미회복(비 한 번에 약 7억 원, 최소 추정) → 30mm 날씨지수 보험 제안 | [보고서 PDF](projects/05_bigcontest-climate-commerce/결과보고서.pdf)·코드 |
 | [궁·능 관람객 예측과 인력 배치](projects/03_timeseries-forecast-report/)<br>시계열 · 4인 팀 | 관람객을 예측해 인력 배치 비용을 줄일 수 있을까? | Chronos-2 + 운영 정보로 인력 배치 비용 **−42.8%** (백테스트) | 분석 보고서 |
 | [Olist 셀러 유치 전략](projects/02_olist-seller-acquisition-dashboard/)<br>대시보드 · 4인 팀 | 어떤 셀러를 유치해야 실제 판매로 이어질까? | 유통×중대형 온라인 셀러 활성화율 54.9% (평균 44.1%) → 같은 계약으로 활성 셀러 **+24.6%** | [▶ 대시보드](https://yub-2n.github.io/ai-data-bootcamp/projects/02_olist-seller-acquisition-dashboard/step7_dashboard.html) |
 | [Olist 배송 지연과 리뷰](projects/01_olist-delivery-review/)<br>ML · 4인 팀 | 배송 지연은 리뷰를 얼마나 깎고, 어디서 생길까? | 지연 시 평균 리뷰 4.29 → **2.57점**, 지연의 81%가 운송사 구간 → 정시율·운송사 관리 권고 | 분석 노트북·발표 자료 |
