@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6단계 결론·액션 제안 | Seller OS</title>
+<!-- 웹폰트는 렌더를 막지 않게 비동기로 — CDN이 막혀도 시스템 한글 폰트로 즉시 그려진다 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      media="print" onload="this.media='all'">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5F6F8;--card:#FFF;--border:#E6E2E2;--line:#C9C9D1;
+  --t1:#2B2B30;--t2:#4A4A52;--t3:#6A6A73;--t4:#8A8A94;
+  --c1:#7E2124;--c3:#C63B3F;
+  --navy:#31538F;--navy-l:#6E8CC4;--navy-xl:#A8BBDD;--purple:#6E47A8;
+  --green:#1B7F49;--amber:#8A6100;
+  --teal:#0d9488;--teal-bg:#f0fdfa;
+  --green-bg:#E8F5EE;--red-bg:#FBEAE8;--amber-bg:#F6F0E2;--navy-bg:#EDF1F8;--grey-bg:#EFEFF1;
+  --font:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',system-ui,-apple-system,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:15px;padding:24px 28px 46px}
+.wrap{max-width:1230px;margin:0 auto}
+
+.stagenav{display:flex;align-items:stretch;gap:0;margin-bottom:13px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.sn{flex:1;min-width:104px;padding:9px 11px;font-size:11px;color:var(--t4);text-decoration:none;
+  border-right:1px solid var(--border);line-height:1.4;transition:background .12s}
+.sn:last-child{border-right:none}
+.sn:hover{background:#FAFAFB}
+.sn .num{display:block;font-size:10px;font-weight:800;letter-spacing:.04em;margin-bottom:2px}
+.sn .nm{display:block;font-size:11.5px;font-weight:600;color:var(--t3)}
+.sn.done .num{color:var(--green)} .sn.done .nm{color:var(--t2)}
+.sn.cur{background:var(--amber);border-right-color:var(--amber)}
+.sn.cur .num{color:rgba(255,255,255,.75)} .sn.cur .nm{color:#fff;font-weight:800}
+
+.hd{background:var(--amber);color:#fff;border-radius:12px;padding:17px 22px;margin-bottom:13px}
+.stagetag{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);
+  padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:800;letter-spacing:.03em;margin-bottom:7px}
+.hd h1{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.hd .sub{font-size:12.5px;color:rgba(255,255,255,.85);margin-top:6px;line-height:1.6}
+.hd .sub b{color:#fff}
+
+.lane{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px 20px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:14px}
+.lane-h{display:flex;align-items:baseline;gap:10px;margin-bottom:13px;flex-wrap:wrap}
+.lane-h .t{font-size:15.5px;font-weight:800;letter-spacing:-.2px}
+.lane-h .m{font-size:12px;color:var(--t3)}
+
+.plain{background:var(--teal-bg);border-left:4px solid var(--teal);border-radius:8px;
+  padding:10px 14px;margin:10px 0;font-size:12px;color:var(--t2);line-height:1.65}
+.plain .h{font-size:11px;font-weight:800;color:var(--teal);margin-bottom:4px;letter-spacing:.02em}
+
+.verdict{border-left:4px solid var(--teal);background:var(--teal-bg);border-radius:8px;
+  padding:11px 15px;margin-top:10px}
+.verdict .h{font-size:11px;font-weight:800;color:var(--teal);margin-bottom:5px;letter-spacing:.03em}
+.verdict .b{font-size:12.5px;color:var(--t1);line-height:1.65}
+.verdict .b b{color:var(--c1)}
+
+.tbl{width:100%;border-collapse:collapse;font-size:11.8px}
+.tbl th{text-align:left;font-size:10.8px;color:var(--t3);padding:7px 8px;font-weight:700;
+  border-bottom:1.5px solid var(--border);white-space:nowrap}
+.tbl th.r{text-align:right}
+.tbl td{padding:6.5px 8px;color:var(--t2);border-bottom:1px solid #F5F6F8;line-height:1.5}
+.tbl td.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl td:first-child{color:var(--t1);font-weight:700}
+.tbl tr.sec td{background:#FAFAFB;font-weight:800;color:var(--t1);font-size:11.3px}
+.wide{overflow-x:auto}
+.pillx{font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.pillx.ok{background:var(--green-bg);color:var(--green)}
+.pillx.no{background:var(--red-bg);color:var(--c3)}
+.pillx.hold{background:var(--amber-bg);color:var(--amber)}
+
+/* 회사 관점 이득 카드 */
+.benefitgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:10px 0}
+.bcard{border:1px solid var(--border);border-radius:10px;padding:13px 15px;background:#FCFCFD}
+.bcard .icon{font-size:11px;font-weight:800;color:var(--amber);letter-spacing:.03em;margin-bottom:5px}
+.bcard .t{font-size:13px;font-weight:800;color:var(--t1);margin-bottom:5px}
+.bcard .d{font-size:11.5px;color:var(--t3);line-height:1.6}
+.bcard .num{font-size:15px;font-weight:800;color:var(--c1);margin:4px 0}
+
+/* 액션 카드 */
+.actlist{display:flex;flex-direction:column;gap:10px}
+.act{border:1px solid var(--border);border-radius:9px;padding:12px 15px;display:grid;
+  grid-template-columns:26px 1fr;gap:10px;background:#FCFCFD}
+.act .n{font-size:14px;font-weight:800;color:#fff;background:var(--amber);width:24px;height:24px;
+  border-radius:6px;display:flex;align-items:center;justify-content:center}
+.act .h{font-size:13px;font-weight:800;color:var(--t1);margin-bottom:3px}
+.act .d{font-size:11.8px;color:var(--t2);line-height:1.6}
+.act .meta{font-size:10.5px;color:var(--t4);margin-top:5px}
+.act .meta b{color:var(--t3)}
+
+/* 이슈트리 요약 */
+.issuemap{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0}
+.imcol{border:1px solid var(--border);border-radius:9px;padding:11px 12px;background:#FCFCFD}
+.imcol .h{font-size:11.5px;font-weight:800;color:var(--t1);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.imnode{font-size:11px;color:var(--t2);padding:5px 0;display:flex;justify-content:space-between;gap:6px;align-items:center;border-bottom:1px dashed #EEE}
+.imnode:last-child{border-bottom:none}
+
+.foot{font-size:11px;color:var(--t4);line-height:1.7;margin-top:16px;padding-top:13px;border-top:1px solid var(--border)}
+.foot b{color:var(--t3)}
+h3{font-size:14px;font-weight:800;margin:14px 0 6px;letter-spacing:-.2px;color:var(--t1)}
+h3:first-child{margin-top:0}
+p.lead{font-size:12.5px;color:var(--t2);line-height:1.7;margin-bottom:8px}
+*,*:before,*:after{min-width:0}
+.wide{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:1050px){
+  .benefitgrid{grid-template-columns:1fr}
+  .issuemap{grid-template-columns:1fr 1fr}
+}
+@media (max-width:720px){
+  body{padding:14px 12px 32px}
+  .issuemap{grid-template-columns:1fr}
+  .tbl{font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="stagenav">
+  <a class="sn done" href="step0_eda.html"><span class="num">EDA</span><span class="nm">데이터 탐색</span></a>
+  <a class="sn done" href="step1_hypothesis_tree.html"><span class="num">1단계</span><span class="nm">가설 트리</span></a>
+  <a class="sn done" href="step2_metric_map.html"><span class="num">2단계</span><span class="nm">지표 지도 (AARRR)</span></a>
+  <a class="sn done" href="step3_logic_tree.html"><span class="num">3단계</span><span class="nm">원인 분해 (로직·이슈 트리)</span></a>
+  <a class="sn done" href="step4_statistical_verification.html"><span class="num">4·5단계</span><span class="nm">통계 검증 · 머신러닝</span></a>
+  <a class="sn cur" href="step6_conclusion.html"><span class="num">6단계</span><span class="nm">결론 · 액션 제안</span></a>
+  <a class="sn done" href="step7_dashboard.html"><span class="num">7단계</span><span class="nm">대시보드</span></a>
+  </div>
+
+  <div class="hd">
+    <div class="stagetag">6단계 산출물 · 결론 및 의사결정 제안 (7단계 중 6)</div>
+    <h1>마케팅 전략 회의 — 왜 지금, 어떤 판매자를 유치해야 회사에 이득인가</h1>
+    <div class="sub">
+      이 페이지는 <b>회사 입장의 의사결정 회의</b>를 가정하고 쓴다 · "소비자에게 좋다"가 아니라
+      <b>"회사 매출·플랫폼 경쟁력에 어떻게 이득인가"</b>를 근거와 함께 답한다 · 모든 수치는 4·5단계에서 검증된 것만 쓴다
+    </div>
+  </div>
+
+  <!-- §1 이슈트리 요약 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§1 · 이슈트리 → 채택된 가설 — 한눈에 보는 최종 판정</span>
+      <span class="m">개별 근거는 <a href="step1_hypothesis_tree.html">1단계</a>, 통계 재현은 <a href="step4_statistical_verification.html">4단계</a>, ML 재확인은 <a href="step4_statistical_verification.html">같은 페이지 §ML</a> 참고</span>
+    </div>
+    <div class="issuemap">
+      <div class="imcol">
+        <div class="h">A · 배송 품질 → 평점</div>
+        <div class="imnode">정시 실패→평점 하락<span class="pillx ok">채택</span></div>
+        <div class="imnode">품목별 평점 차이<span class="pillx ok">채택</span></div>
+        <div class="imnode">배송일→평점<span class="pillx ok">채택</span></div>
+        <div class="imnode">같은 주 배송→평점<span class="pillx ok">채택</span></div>
+        <div class="imnode">초기 품질→지속<span class="pillx hold">부분채택</span></div>
+        <div class="imnode">집계 수준에 따른 결론 변동<span class="pillx hold">주의</span></div>
+      </div>
+      <div class="imcol">
+        <div class="h">B · 셀러 선별</div>
+        <div class="imnode">사업 규모(중대형)<span class="pillx ok">채택</span></div>
+        <div class="imnode">사업 형태(유통)<span class="pillx ok">채택</span></div>
+        <div class="imnode">성향 라벨<span class="pillx no">기각</span></div>
+        <div class="imnode">자기신고 항목<span class="pillx hold">측정불가</span></div>
+      </div>
+      <div class="imcol">
+        <div class="h">C · 유입 채널</div>
+        <div class="imnode">채널→계약률<span class="pillx ok">채택</span></div>
+        <div class="imnode">채널→활성화율<span class="pillx no">기각</span></div>
+        <div class="imnode">품목별 채널 편중<span class="pillx no">기각</span></div>
+      </div>
+      <div class="imcol">
+        <div class="h">D · 품목 카테고리</div>
+        <div class="imnode">세그먼트별 활성화 속도<span class="pillx ok">채택</span></div>
+        <div class="imnode">housewares 활성화율↑<span class="pillx ok">채택</span></div>
+        <div class="imnode">pet_shop 활성화율<span class="pillx hold">판정보류</span></div>
+        <div class="imnode">갭→활성화 직접 연결<span class="pillx no">기각</span></div>
+        <div class="imnode">셀러당 매출↔셀러 희소성<span class="pillx no">기각</span></div>
+      </div>
+    </div>
+    <div class="plain"><div class="h">쉽게 말하면</div>
+      18개 가지 중 <b>채택 9개, 부분채택·보류·측정불가·주의 4개, 기각 5개</b>
+      (7단계 대시보드의 근거 표와 같은 집합 — 거기에는 토대 1건이 더해져 19건이다). 살아남은 결론만으로 액션을 만든다 — 기각된 가설(성향 라벨, 채널→활성화율 등)에는
+      돈이나 시간을 쓰지 않는 것도 이 프로젝트의 중요한 결론이다.</div>
+  </div>
+
+  <!-- §2 회사 관점 이득 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§2 · 회사 입장에서 이 결론이 왜 이득인가</span>
+      <span class="m">"판매자를 위한 결론"이 아니라 "이 결론을 실행하면 회사 매출·플랫폼 경쟁력이 어떻게 좋아지는가"</span>
+    </div>
+    <div class="benefitgrid">
+      <div class="bcard">
+        <div class="icon">이득 ①</div>
+        <div class="t">셀러 유치는 곧 거래액(GMV) 성장 — 파이 나눠먹기가 아니다</div>
+        <div class="num">β ≈ 1 (95% CI 0.68~1.18)</div>
+        <div class="d">"신규 셀러를 늘려도 기존 셀러끼리 매출을 나눠 가질 뿐"이라는 반론이 있을 수 있다.
+          품목·월 고정효과 회귀에서 β=0은 명확히 기각됐고(t=7.20), 대부분 명세에서 β=1과 구별되지 않는다 —
+          <b>셀러 수가 늘면 거래액도 거의 같은 비율로 함께 늘어난다.</b> 회사 수수료 매출은 GMV에 비례하므로,
+          이는 곧 <b>수수료 매출 성장</b>으로 직결된다.</div>
+      </div>
+      <div class="bcard">
+        <div class="icon">이득 ②</div>
+        <div class="t">"아무나"가 아니라 "잘 팔 사람"을 골라 영업비용 대비 효율을 높인다</div>
+        <div class="num">활성화 확률 2.06배 / 1.53배</div>
+        <div class="d">유통(reseller) × 중대형 온라인(online_big) 셀러는 오프라인 단독 셀러보다 활성화 확률이 확연히 높다
+          (통계 검정과 ML 오즈비가 같은 방향으로 일치). <b>같은 영업 리소스로 더 많은 활성 셀러를 만들 수 있다</b> —
+          영업팀이 상담 우선순위를 정하는 데 바로 쓸 수 있는 규칙이다.</div>
+      </div>
+      <div class="bcard">
+        <div class="icon">이득 ③</div>
+        <div class="t">배송 품질 개선은 평점을 통해 구매자 이탈을 막는 방어 전략이다</div>
+        <div class="num">정시 실패 시 평점 −1.58점</div>
+        <div class="d">정시 배송 실패는 평점을 5점 만점에 1.58점이나 떨어뜨린다(r=0.51, 중간~큰 효과). 평점 하락은 재구매율과
+          플랫폼 신뢰도에 직접 영향을 준다. <b>신규 셀러 온보딩 시 배송 SLA 교육을 강화하는 것은 매출 방어 투자다.</b></div>
+      </div>
+    </div>
+    <h3>회사 수익으로 환산하면 — 경로는 두 개다</h3>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>경로</th><th>추정</th><th>확실성</th><th>표현 시 주의</th></tr></thead>
+      <tbody>
+        <tr><td>① 거래액 증가</td>
+          <td>신규 셀러 1명의 초기 180일 거래액 중앙값 <b>R$850</b>(180일 관측 확보 셀러 2,079명 실측) → 연환산 약 R$1,723 ·
+            43명이면 <b>연 약 R$74K</b>(보수적으로 R$55K)</td>
+          <td>조건부</td>
+          <td>"43명 유치하면 거래액이 는다"는 <b>인과 주장이므로 쓰지 않는다</b>. "43명이 과거 신규 셀러와 비슷하게 판다면 그들이 만드는 거래액이 연 R$74K"로 말한다</td></tr>
+        <tr><td>② 영업 효율</td>
+          <td>같은 계약 98건에서 활성 셀러 <b>43명 → 54명(+24.6%)</b> — 유통 × 중대형·중형 온라인 세그먼트 활성화율이 <b>54.9%</b>(151/275)로 평균 44.1%보다 높다</td>
+          <td>높음</td>
+          <td>"추가 예산 없이 리드 19.7% 절감"은 <b>틀린 표현</b>이다. 사업 형태·규모는 리드 단계에 없고 계약 시점에야 확인되므로,
+            <b>"같은 상담량에서 결과를 늘린다"</b>가 올바른 사용법이다</td></tr>
+      </tbody>
+    </table></div>
+    <div class="plain"><div class="h">"신규 셀러가 기존 셀러 매출을 빼앗는 것 아닌가?" — 직접 검정했다</div>
+      신규 셀러가 많이 들어온 달에 기존 셀러 매출이 줄어드는 관계는 <b>관측되지 않았다</b>
+      (품목·월 고정효과 회귀 b=−0.10, 클러스터 SE 0.19, t=−0.52, 95% 신뢰구간이 0을 포함).
+      오히려 신규 셀러 수와 기존 셀러 GMV의 상관은 <b>+0.68</b>로 함께 늘어난다. 다만 관측 데이터의 상관이므로 인과 확정은 파일럿이 필요하다.</div>
+    <div class="plain"><div class="h">의사결정 기준 — 리드 1건을 얼마까지 주고 사올 수 있나</div>
+      수수료율 데이터가 없으므로 <b>파라미터로 제시</b>한다. take rate 15% 가정 시 활성 셀러 1명당 연 회사 수익 <b>R$258</b>,
+      43명이면 연 <b>R$11,113</b>. 목표 달성에 필요한 리드가 약 694건이므로 <b>리드 1건을 R$16 이하로 확보하면 1년 안에 회수</b>된다
+      (셀러가 2년 활동하면 R$32까지 허용). 규모 자체는 연 거래액의 0.7% 수준이므로,
+      이 제안의 가치는 절대 규모가 아니라 <b>추가 예산 없는 24.6% 효율 개선 · 명확한 리드 단가 기준 · 다른 품목에 반복 적용 가능한 절차</b>에 있다.</div>
+
+    <div class="verdict">
+      <div class="h">그래서 뭐 — 이번 결론의 성공 기준은 "계약"이 아니라 "활성화"다</div>
+      <div class="b">계약 건수를 늘리는 것은 쉽지만, <b>활성화(90일 내 첫 판매)되지 않는 계약은 회사 매출에 기여하지 않는다.</b>
+        이 프로젝트가 "몇 명과 계약했는가"가 아니라 "몇 명이 실제로 판매를 시작했는가"를 성공 기준으로 삼은 이유가 여기에 있다 —
+        회사 입장에서 의미 있는 성장은 활성화된 셀러 수와 그로 인한 GMV 증가이지, 계약서 숫자가 아니다.</div>
+    </div>
+  </div>
+
+  <!-- §3 액션 제안 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§3 · 액션 제안 — 이슈트리 채택 가설 → 실행 항목</span>
+      <span class="m">모두 4·5단계에서 검증된 근거에서 직접 도출됨</span>
+    </div>
+    <div class="actlist">
+      <div class="act">
+        <div class="n">1</div>
+        <div>
+          <div class="h">영업 우선순위 규칙 적용 — "유통 × 중대형 온라인"을 먼저 상담</div>
+          <div class="d">근거: B-1·B-2(카이제곱 채택) + 5단계 오즈비(2.06배/1.53배, ML로 재확인).
+            이 세그먼트의 활성화율은 54.9%로, <b>같은 계약 98건에서 활성 셀러가 43명 → 54명(+24.6%)</b>이 된다 — 추가 예산이 들지 않는 개선이다.
+            단, 사업 형태·규모는 리드가 아니라 <b>계약 시점에 확인되는 정보</b>이므로 "리드를 줄이는 기준"이 아니라 <b>상담 우선순위 기준</b>으로 쓴다.</div>
+          <div class="meta"><b>근거</b>: 1단계 B-1/B-2 · 4·5단계 §5 · §ML</div>
+        </div>
+      </div>
+      <div class="act">
+        <div class="n">2</div>
+        <div>
+          <div class="h">housewares +34명, pet_shop +9명 — 품목별 유치 목표 설정</div>
+          <div class="d">근거: D-2 채택(housewares 활성화율 유의하게 높음) + 월평균 셀러당 GMV가 2017년 하반기 수준(298/347)에서
+            현재(365/424)로 이미 회복 추세이나, 카테고리 내 활동 셀러 자체가 부족한 상태(현재 149명/42.5명)다.
+            기준선 회복에 필요한 활동 셀러 수까지 단계적으로 유치한다.</div>
+          <div class="meta"><b>근거</b>: 3단계 목표 역산 · 4단계 §4(기준선 재현) · 08 노트북 §7</div>
+        </div>
+      </div>
+      <div class="act">
+        <div class="n">3</div>
+        <div>
+          <div class="h">pet_shop은 목표는 유지하되 "확정 채택"은 보류 — 추가 관찰 필요</div>
+          <div class="d">근거: D-3 이항검정에서 p=0.330으로, 신뢰구간이 전체 평균을 포함해 "평균보다 유의하게 높다"고
+            단정할 수 없다. 유치 목표(+9명) 자체는 GMV 갭 근거로 유지하되, "활성화율이 특별히 높은 품목"이라는
+            주장은 다음 분기 데이터로 재확인한다.</div>
+          <div class="meta"><b>근거</b>: 1단계 D-3 · 4단계 §5</div>
+        </div>
+      </div>
+      <div class="act">
+        <div class="n">4</div>
+        <div>
+          <div class="h">온보딩 단계에 배송 SLA 교육 추가</div>
+          <div class="d">근거: A-1(정시 실패→평점 −1.58점, r=0.51) 채택. 신규 셀러 온보딩 프로세스에
+            "정시 배송이 평점·재구매에 미치는 영향"을 정량적으로 교육하는 세션을 추가한다.</div>
+          <div class="meta"><b>근거</b>: 1단계 A-1 · 4단계 §2</div>
+        </div>
+      </div>
+      <div class="act">
+        <div class="n">5</div>
+        <div>
+          <div class="h">성향 라벨·자기신고 항목은 선별 기준에서 제외</div>
+          <div class="d">근거: B-3이 카이제곱·log-rank·ML 세 가지 방법 모두에서 기각. B-4(자기신고 항목)는 결측률
+            91.8~92.5%로 애초에 측정 불가. 리소스를 여기 쓰지 않는다.</div>
+          <div class="meta"><b>근거</b>: 1단계 B-3/B-4 · 4·5단계 §ML</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §4 데이터 한계 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§4 · 데이터 한계 — 숨기지 않고 명시한다</span>
+      <span class="m">의사결정자가 이 결론을 어디까지 믿어도 되는지 알아야 한다</span>
+    </div>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>한계</th><th>내용</th><th>실행에 미치는 영향</th></tr></thead>
+      <tbody>
+        <tr><td>인과 미식별</td><td>탄력성 β는 같은 시기 상관관계다. 셀러가 늘어서 GMV가 늘었는지, GMV가 늘어서 셀러가 유입됐는지 구분하지 못한다</td><td>실제 유치를 늘려보는 파일럿 없이는 "얼마나 늘리면 얼마나 늘어나는지" 확정 불가 — 액션 1·2는 우선 소규모로 시작해 효과를 관찰</td></tr>
+        <tr><td>개별 예측 불가</td><td>계약 시점 정보만으로는 ROC-AUC 0.62가 한계 — 실무 스코어링 기준(0.7+)에 못 미침</td><td>"이 셀러는 성공/실패"를 개별 점수로 매기지 않는다. 그룹 단위 우선순위 규칙만 사용</td></tr>
+        <tr><td>적용 범위 한정</td><td>퍼널(마케팅 유입) 경로 셀러는 전체 판매 셀러의 12.3%에 불과</td><td>이 결론은 퍼널 경로에 한정된다. 다른 유입 경로(직접 가입 등) 셀러에는 별도 분석 필요</td></tr>
+        <tr><td>온보딩 이후 데이터 부재</td><td>계약 이후~첫 판매 사이에 무슨 일이 있었는지(교육 참여, 상품 등록 지원 등)에 대한 데이터가 없음</td><td>액션 4(온보딩 교육)의 효과는 이번 분석만으로는 검증 불가 — 시행 후 별도 추적 필요</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="foot">
+    <b>요약</b>: 성공 기준은 계약이 아니라 <b>활성화</b> — 유통×중대형 온라인 우선 상담(액션1), housewares/pet_shop 유치 목표(액션2·3),
+    배송 SLA 온보딩 교육(액션4), 성향 라벨 배제(액션5). 회사 이득: 수수료 매출(GMV 탄력성 β≈1) · 영업 효율(오즈비 2.06/1.53배) · 평점 방어(−1.58점 리스크 차단).<br>
+    <b>다음</b>: 위 결론을 상시 모니터링할 수 있는 형태로 <a href="step7_dashboard.html">7단계 대시보드</a>에 옮긴다.
+  </div>
+
+</div>
+</body>
+</html>

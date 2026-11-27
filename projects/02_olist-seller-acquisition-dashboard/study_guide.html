@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1100">
+<title>처음 보는 사람을 위한 설명서 | Seller OS</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5F6F8;--card:#FFF;--border:#E6E2E2;
+  --t1:#2B2B30;--t2:#4A4A52;--t3:#6A6A73;--t4:#8A8A94;
+  --c1:#7E2124;--c3:#C63B3F;
+  --navy:#31538F;--navy-l:#6E8CC4;--navy-xl:#A8BBDD;--purple:#6E47A8;
+  --green:#1B7F49;--amber:#8A6100;
+  --teal:#0d9488;--teal-bg:#f0fdfa;
+  --indigo:#4F46E5;--indigo-bg:#EEF0FE;
+  --green-bg:#E8F5EE;--red-bg:#FBEAE8;--amber-bg:#F6F0E2;--navy-bg:#EDF1F8;
+  --font:'Pretendard',-apple-system,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:15.5px;line-height:1.6}
+.wrap{max-width:920px;margin:0 auto;padding:0 24px 70px}
+
+.hero{background:linear-gradient(135deg,var(--t1) 0%,var(--navy) 100%);color:#fff;
+  padding:38px 30px 30px;margin:0 0 0;}
+.hero-in{max-width:920px;margin:0 auto;padding:0 24px}
+.hero .tag{display:inline-flex;background:rgba(255,255,255,.16);padding:4px 12px;border-radius:20px;
+  font-size:12px;font-weight:800;letter-spacing:.03em;margin-bottom:12px}
+.hero h1{font-size:25px;font-weight:800;letter-spacing:-.4px;line-height:1.4}
+.hero p{font-size:13.5px;color:rgba(255,255,255,.82);margin-top:10px;line-height:1.75;max-width:760px}
+.hero p b{color:#fff}
+
+.navbar{position:sticky;top:0;background:rgba(255,255,255,.97);backdrop-filter:blur(4px);
+  border-bottom:1px solid var(--border);z-index:10;overflow-x:auto;white-space:nowrap}
+.navbar-in{max-width:920px;margin:0 auto;padding:9px 24px;display:flex;gap:4px}
+.navbar a{font-size:11.8px;font-weight:700;color:var(--t3);text-decoration:none;padding:6px 10px;border-radius:7px;flex-shrink:0}
+.navbar a:hover{background:var(--navy-bg);color:var(--navy)}
+
+.sec{padding:34px 0 6px;border-bottom:1px dashed var(--border)}
+.sec:last-of-type{border-bottom:none}
+.sec-num{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;
+  color:#fff;background:var(--navy);padding:4px 12px;border-radius:20px;letter-spacing:.03em;margin-bottom:10px}
+.sec h2{font-size:20px;font-weight:800;letter-spacing:-.3px;margin-bottom:8px;line-height:1.4}
+.sec .dek{font-size:13.5px;color:var(--t3);margin-bottom:16px;line-height:1.7}
+p.body{font-size:14px;color:var(--t2);line-height:1.85;margin-bottom:12px}
+p.body b{color:var(--t1)}
+ul.body{margin:0 0 14px 0;padding-left:0;list-style:none}
+ul.body li{font-size:14px;color:var(--t2);line-height:1.8;padding-left:16px;position:relative;margin-bottom:4px}
+ul.body li:before{content:'—';position:absolute;left:0;color:var(--t4)}
+
+.analogy{background:var(--indigo-bg);border-left:4px solid var(--indigo);border-radius:9px;
+  padding:13px 16px;margin:14px 0;font-size:13.5px;color:var(--t2);line-height:1.75}
+.analogy .h{font-size:11.5px;font-weight:800;color:var(--indigo);margin-bottom:5px;letter-spacing:.02em}
+
+.plain{background:var(--teal-bg);border-left:4px solid var(--teal);border-radius:9px;
+  padding:13px 16px;margin:14px 0;font-size:13.5px;color:var(--t2);line-height:1.75}
+.plain .h{font-size:11.5px;font-weight:800;color:var(--teal);margin-bottom:5px;letter-spacing:.02em}
+
+.result{background:#FCFCFD;border:1px solid var(--border);border-left:4px solid var(--c1);border-radius:9px;
+  padding:14px 17px;margin:14px 0}
+.result .h{font-size:11.5px;font-weight:800;color:var(--c1);margin-bottom:6px;letter-spacing:.03em}
+.result .b{font-size:13.5px;color:var(--t1);line-height:1.8}
+.result .b b{color:var(--c1)}
+
+.termgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+.term{border:1px solid var(--border);border-radius:9px;padding:11px 14px;background:#FCFCFD}
+.term .t{font-size:13px;font-weight:800;color:var(--navy)}
+.term .d{font-size:12px;color:var(--t3);line-height:1.6;margin-top:4px}
+
+.tbl{width:100%;border-collapse:collapse;font-size:12.8px;margin:12px 0}
+.tbl th{text-align:left;font-size:11px;color:var(--t3);padding:7px 8px;font-weight:700;
+  border-bottom:1.5px solid var(--border);white-space:nowrap}
+.tbl td{padding:7px 8px;color:var(--t2);border-bottom:1px solid #F5F6F8;line-height:1.5}
+.tbl td:first-child{color:var(--t1);font-weight:700}
+.wide{overflow-x:auto}
+.pillx{font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.pillx.ok{background:var(--green-bg);color:var(--green)}
+.pillx.no{background:var(--red-bg);color:var(--c3)}
+.pillx.hold{background:var(--amber-bg);color:var(--amber)}
+
+.linkbox{display:inline-flex;align-items:center;gap:6px;background:var(--navy-bg);color:var(--navy);
+  font-size:12.5px;font-weight:700;padding:6px 13px;border-radius:8px;text-decoration:none;margin-top:8px}
+.linkbox:hover{background:var(--navy-xl)}
+
+.faqitem{border:1px solid var(--border);border-radius:9px;padding:13px 16px;margin-bottom:9px;background:#FCFCFD}
+.faqitem .q{font-size:13.5px;font-weight:800;color:var(--t1);margin-bottom:5px}
+.faqitem .a{font-size:13px;color:var(--t2);line-height:1.75}
+
+.finalbox{background:linear-gradient(135deg,var(--t1) 0%,var(--navy) 100%);color:#fff;border-radius:14px;
+  padding:22px 26px;margin-top:20px}
+.finalbox h3{font-size:16px;font-weight:800;margin-bottom:8px}
+.finalbox p{font-size:13px;color:rgba(255,255,255,.85);line-height:1.75}
+
+.gatecard{border:1px solid var(--border);border-radius:9px;padding:11px 14px;background:#FCFCFD;margin-bottom:8px;
+  display:flex;gap:12px;align-items:flex-start}
+.gatecard .gn{flex-shrink:0;width:26px;height:26px;border-radius:7px;background:var(--navy);color:#fff;
+  font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.gatecard .gb{flex:1;font-size:13px;color:var(--t2);line-height:1.6}
+.gatecard .gb b{color:var(--t1)}
+.gatecard .gcount{flex-shrink:0;font-size:15px;font-weight:800;color:var(--navy);white-space:nowrap}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-in">
+    <div class="tag">팀 학습용 · 처음 보는 사람도 읽을 수 있도록 작성 · 최종본 기준</div>
+    <h1>이 프로젝트, 5분이면 전체 그림이 잡히는 설명서</h1>
+    <p>이 문서 하나만 읽어도 <b>왜 이 프로젝트를 했는지, 무엇을 발견했는지, 최종 결론이 무엇인지</b> 처음부터 끝까지 이해할 수 있도록 썼습니다.
+      통계·머신러닝 용어는 나올 때마다 <b>비유와 쉬운 말로 먼저 설명</b>하고, 그 다음에 이 프로젝트의 실제 숫자를 보여주는 순서로 구성했습니다.
+      더 자세한 원본 산출물은 각 섹션 끝의 링크로 이동해서 볼 수 있습니다.</p>
+  </div>
+</div>
+
+<div class="navbar"><div class="navbar-in">
+  <a href="#intro">한눈에 보기</a>
+  <a href="#eda">0. 왜 시작했나</a>
+  <a href="#step1">1. 가설 트리</a>
+  <a href="#step2">2. 지표 지도</a>
+  <a href="#step3">3. 로직 트리</a>
+  <a href="#step45">4·5. 통계 검증·머신러닝</a>
+  <a href="#step6">6. 결론</a>
+  <a href="#step7">7. 대시보드</a>
+  <a href="#faq">용어 사전</a>
+</div></div>
+
+<div class="wrap">
+
+  <!-- 인트로 -->
+  <div class="sec" id="intro">
+    <div class="sec-num">한눈에 보기</div>
+    <h2>이 프로젝트가 한 줄로 답하는 질문</h2>
+    <div class="dek">"셀러를 유치할 때, 계약서에 도장 찍은 숫자를 셀 것인가, 실제로 물건을 팔기 시작한 사람 수를 셀 것인가 — 그리고 그 셀러를 어떤 품목에서, 누구를, 어디서 데려올 것인가?"</div>
+    <p class="body">이 팀은 온라인 마켓플레이스(Olist, 브라질의 이커머스 플랫폼)의 실제 거래 데이터와, 신규 셀러를 영업해서 계약을 따내는
+      마케팅 팀의 데이터를 합쳐서 이 질문에 답했습니다. 결론부터 말하면 <b>계약 건수를 성과로 세면 안 됩니다</b> — 계약한 셀러의 절반 이상이
+      계약만 하고 한 건도 팔지 않기 때문입니다. 그래서 <b>"계약 후 90일 안에 첫 판매를 낸 셀러 수"</b>를 진짜 성공 기준으로 다시 정의하고,
+      그 기준으로 <b>"어떤 품목의, 어떤 셀러를, 어디서, 어떻게 유치해야 하는지"</b>를 데이터로 끝까지 검증했습니다.</p>
+    <div class="analogy">
+      <div class="h">비유로 이해하기</div>
+      헬스장이 "신규 회원 100명 등록!"이라고 홍보하는 것과, "신규 회원 중 3개월 뒤에도 계속 나오는 사람이 몇 명인지"를 보는 것은
+      완전히 다른 이야기입니다. 등록만 하고 한 번도 안 나오는 회원이 많다면, 진짜 성과는 "등록 수"가 아니라 "실제로 다니는 사람 수"겠죠.
+      이 프로젝트에서 "계약"은 등록, "활성화(90일 내 첫 판매)"는 실제로 다니는 것에 해당합니다.
+    </div>
+    <p class="body">최종 결론은 네 가지입니다. ① <b>housewares(생활용품)와 pet_shop(반려동물용품)</b> 두 품목에서 셀러를 각각 최소 34명, 9명
+      더 유치하면 2017년 하반기 수준의 셀러당 매출을 회복합니다(최소 +43명, 계약 73건). ② 상담은 <b>유통업자이면서 중대형 규모인 온라인
+      판매자</b>를 먼저 하면 활성화 확률이 눈에 띄게 높습니다. ③ housewares는 <b>같은 주(state) 배송이 가능한 지역(RJ·MG 등)</b>을 우선
+      공략해야 배송이 짧아지고 평점이 오릅니다. ④ 셀러 수를 늘리는 것은 "기존 셀러끼리 매출을 나눠 갖는 것"이 아니라
+      <b>거래액 자체를 키우는 일</b>이라는 것을 통계적으로 확인했습니다(다만 인과관계까지 확정된 것은 아닙니다 — 아래 한계 참고).</p>
+  </div>
+
+  <!-- 0. EDA -->
+  <div class="sec" id="eda">
+    <div class="sec-num">0단계 · 왜 이 프로젝트를 시작했나</div>
+    <h2>데이터를 열어보니: 손님은 늘어나는데 파는 사람은 그대로였다</h2>
+    <div class="dek">2016년 9월부터 2018년 10월까지의 실제 주문 데이터를 살펴봤습니다.</div>
+    <p class="body">매달 "처음 주문한 고객 수"와 "처음 판매한 셀러 수"를 나란히 세어봤더니, <b>반기 평균 기준</b>(2017년 상반기 → 2018년
+      상반기)으로 <b>고객은 2.8배</b> 늘었는데 <b>셀러는 1.08배</b>, 사실상 그대로였습니다. 그 결과 셀러 한 명이 감당해야 하는 고객 수의
+      비율이 <b>16.4:1 → 42.3:1</b>로 벌어졌습니다.</p>
+    <div class="analogy">
+      <div class="h">비유로 이해하기</div>
+      식당에 손님은 계속 늘어나는데 요리사 수는 그대로라고 생각해보세요. 처음엔 버틸 수 있어도, 어느 순간부터는 대기 줄이 길어지고
+      서비스 질이 떨어지기 시작합니다. 이 프로젝트는 "요리사(셀러)를 어떤 메뉴(품목)에, 어떻게, 어떤 기준으로 더 뽑을 것인가"에 대한 이야기입니다.
+    </div>
+    <p class="body">이 발견이 프로젝트 전체의 출발점입니다. 여기서 "그럼 아무 품목, 아무 셀러나 뽑아도 되나, 아니면 골라야 하나?"라는
+      다음 질문이 나오고, 이게 1단계 가설 트리로 이어집니다. 데이터를 보다가 몇 가지 품질·범위 이슈(마케팅 유입 경로가 확인되는 셀러는
+      전체의 12.3%뿐이라는 점 등)도 발견해서 미리 정리해뒀습니다 — 나중에 "왜 이렇게 분석 범위를 정했는지"를 이해하는 데 필요합니다.</p>
+    <a class="linkbox" href="step0_eda.html">→ 0단계 산출물 자세히 보기</a>
+  </div>
+
+  <!-- 1. 가설트리 -->
+  <div class="sec" id="step1">
+    <div class="sec-num">1단계 · 가설 트리</div>
+    <h2>"활성화를 가르는 요인"을 빠짐없이, 겹치지 않게 쪼갠다</h2>
+    <div class="dek">가설 트리란 큰 질문을 "서로 겹치지 않으면서 빠짐없이(MECE)" 작은 질문들로 쪼개는 도구입니다.</div>
+    <div class="analogy">
+      <div class="h">비유로 이해하기</div>
+      "왜 매출이 안 늘까?"라는 막연한 질문을 바로 풀 수는 없습니다. 그래서 "고객이 안 늘어서인가, 아니면 고객당 구매액이 줄어서인가"처럼
+      원인을 나눠서 하나씩 확인하는 것이 가설 트리입니다. 병원에서 "어디가 아프세요?"라고 막연히 묻지 않고 "머리? 배? 언제부터?"로
+      좁혀가며 진단하는 것과 같습니다.
+    </div>
+    <p class="body">이 프로젝트는 "무엇이 셀러 활성화를 가르는가"를 4개 가지로 나눴습니다.</p>
+    <div class="termgrid">
+      <div class="term"><div class="t">A · 배송 품질</div><div class="d">정시 배송이 늦으면 평점이 떨어지고, 그게 다시 판매에 영향을 주는가?</div></div>
+      <div class="term"><div class="t">B · 셀러 선별</div><div class="d">계약 전에 알 수 있는 정보(사업 규모, 형태)로 "잘 팔 사람"을 미리 구분할 수 있는가?</div></div>
+      <div class="term"><div class="t">C · 유입 채널</div><div class="d">어느 채널(광고, 검색, 추천 등)로 들어온 리드가 계약도 잘 되고 활성화도 잘 되는가?</div></div>
+      <div class="term"><div class="t">D · 품목 카테고리</div><div class="d">어떤 상품 카테고리가 지금 공급이 부족하고, 유치했을 때 잘 팔릴 가능성이 높은가?</div></div>
+    </div>
+    <div class="result">
+      <div class="h">결과 요약</div>
+      <div class="b">세부 가설 대부분이 <b>채택</b>(데이터로 확인됨)됐고, 일부는 <b>부분채택/판정보류</b>, 나머지는 <b>기각</b>됐습니다.
+        기각된 가설에 시간과 예산을 쓰지 않기로 한 것도 이 단계의 중요한 성과입니다. 예를 들어 "셀러 성향 자기평가 라벨로 활성화를
+        예측할 수 있다"는 가설은 통계 검정·log-rank·머신러닝 세 가지 방법 모두에서 관계가 없다고 나와 <b>선별 기준에서 제외</b>했습니다.</div>
+    </div>
+    <a class="linkbox" href="step1_hypothesis_tree.html">→ 1단계 산출물 자세히 보기 (전체 가설 트리)</a>
+  </div>
+
+  <!-- 2. AARRR -->
+  <div class="sec" id="step2">
+    <div class="sec-num">2단계 · 지표 지도 (AARRR)</div>
+    <h2>"셀러가 유입되고, 활성화되고, 계속 남는" 전 과정을 숫자로 잰다</h2>
+    <div class="dek">AARRR은 Acquisition(유입) - Activation(활성화) - Retention(유지) - Referral(추천) - Revenue(매출)의 앞글자를 딴, 성장 단계별 지표 관리 방법입니다.</div>
+    <div class="analogy">
+      <div class="h">비유로 이해하기</div>
+      물이 새는 양동이를 생각해보세요. 아무리 물(신규 셀러)을 많이 부어도 양동이에 구멍(중간에 이탈하는 지점)이 있으면 채워지지 않습니다.
+      AARRR은 "양동이의 어느 지점에서 물이 새는지"를 단계별로 확인하는 지도입니다.
+    </div>
+    <p class="body">셀러 기준으로 각 단계를 실측하면: <b>유입</b>(마케팅 리드 8,000건) → <b>계약</b>(842건, 전환율 10.5%) →
+      <b>90일 관측 확보</b>(667건) → <b>활성화</b>(294명이 첫 판매, 44.1%). 계약과 활성화 사이의 큰 낙차가 이 프로젝트 전체의
+      핵심 문제입니다 — <b>계약의 절반 이상이 팔지 않습니다.</b> 측정이 불가능한 항목(셀러 만족도 등 설문 데이터가 없는 지표)은
+      <b>숨기지 않고 "측정 불가"로 빈칸 처리</b>했습니다.</p>
+    <a class="linkbox" href="step2_metric_map.html">→ 2단계 산출물 자세히 보기</a>
+  </div>
+
+  <!-- 3. 로직트리 -->
+  <div class="sec" id="step3">
+    <div class="sec-num">3단계 · 원인 분해 (로직 트리 · 이슈 트리)</div>
+    <h2>"몇 명을 유치해야 하는가"와 "어떤 품목부터 볼 것인가"를 계산으로 검산 가능하게 만든다</h2>
+    <div class="dek">가설 트리가 "어떤 원인이 있을까"를 나열하는 도구라면, 로직 트리는 "그 원인이 결과로 이어지는 계산식"을 사칙연산으로 쪼개는 도구입니다.</div>
+    <div class="analogy">
+      <div class="h">비유로 이해하기</div>
+      가계부를 쓸 때 "이번 달 지출 = 식비 + 교통비 + 기타"처럼 더하고 빼서 총액을 맞추듯이, 로직 트리는
+      "필요 셀러 수 = 현재 수요 ÷ 기준선 생산성"처럼 숫자를 분해해서, 어느 항목을 얼마나 바꿔야 목표에 도달하는지 <b>역산</b>합니다.
+    </div>
+    <p class="body">이 단계에서 두 가지를 계산했습니다. 하나는 <b>품목별 수요-공급 갭</b>
+      (= 최근 6개월 GMV 성장률 − 활동 셀러 성장률)을 71개 카테고리 중 거래량 기준을 만족하는 40개 품목에 대해 계산해, 갭이 큰 순서로
+      후보를 줄 세웠습니다. 다른 하나는 <b>"2017년 하반기 수준의 셀러당 매출을 회복하려면 몇 명이 더 필요한가"</b>를 역산한 것입니다.
+      housewares는 2017년 하반기에 셀러 1인당 월평균 매출이 R$297.7였는데, 지금은 활동 셀러가 부족해 셀러 1인당 매출이 오히려
+      R$365로 높아진 상태입니다(공급 부족 때문에 한 명에게 부하가 몰린 상태). 이 수준을 유지하며 현재 수요를 감당하려면
+      <b>housewares 최소 +34명, pet_shop 최소 +9명(계 최소 +43명)</b>이 필요하다는 계산이 나옵니다. 이 계산은 원본 CSV로 재현해 제3의 품목
+      (office_furniture)에서도 교차 검증했습니다.</p>
+    <a class="linkbox" href="step3_logic_tree.html">→ 3단계 산출물 자세히 보기</a>
+  </div>
+
+  <!-- 4·5. 통계검증 + ML (같은 파일에 통합) -->
+  <div class="sec" id="step45">
+    <div class="sec-num">4·5단계 · 통계 검증 · 머신러닝 (한 파일에 통합)</div>
+    <h2>"우연히 그렇게 보이는 것"과 "진짜 차이가 있는 것"을 구분하고, 다른 방법으로도 같은 결론이 나오는지 확인한다</h2>
+    <div class="dek">통계 검증과 머신러닝은 <b>step4_statistical_verification.html 한 파일</b>에 같이 정리돼 있습니다 — 별도의 5단계 파일은 없습니다.</div>
+    <p class="body">통계 용어 몇 개만 알면 이 단계 전체를 이해할 수 있습니다.</p>
+    <div class="termgrid">
+      <div class="term"><div class="t">p-value (이 차이가 우연일 확률)</div><div class="d">동전을 10번 던져 앞면이 8번 나왔다면 "이 동전이 진짜 조작된 것"일 수도, "우연히 그렇게 나온 것"일 수도 있습니다. p-value가 작을수록(관례적으로 0.05 미만) "우연이 아니다"에 가깝습니다.</div></div>
+      <div class="term"><div class="t">효과크기 (차이가 얼마나 큰지)</div><div class="d">"우연이 아니다"와 "그 차이가 실제로 의미 있게 크다"는 다른 이야기입니다. 표본이 아주 많으면 아주 작은 차이도 "우연이 아니다"로 나오기 때문에, 반드시 "그래서 얼마나 큰 차이인지"를 같이 봐야 합니다. 대략 0.1 미만은 작음, 0.3 안팎은 중간, 0.5 이상은 큼으로 봅니다.</div></div>
+      <div class="term"><div class="t">신뢰구간 (진짜 값이 있을 법한 범위)</div><div class="d">여론조사에서 "지지율 40%, 오차범위 ±3%"라고 하는 것과 같습니다. 추정값 하나만 믿지 않고, "진짜 값은 이 범위 어딘가에 있을 것"이라고 폭을 두고 말하는 것입니다.</div></div>
+      <div class="term"><div class="t">log-rank 검정 (시간이 걸리는 사건 비교)</div><div class="d">"A반과 B반 중 어느 반 학생들이 문제를 더 빨리 푸는가"를 비교할 때, 아직 다 못 푼 학생까지 활용해서 비교하는 방법입니다. "90일 안에 팔았다/못 팔았다"만 보는 것보다 정보를 더 씁니다.</div></div>
+      <div class="term"><div class="t">다중비교 보정 (여러 번 검정하면 생기는 착시)</div><div class="d">검정을 여러 번 하면 진짜 효과가 하나도 없어도 우연히 하나쯤은 "유의"하게 나올 확률이 커집니다. 이 프로젝트는 17번 검정했는데, 보정 없이는 그중 하나가 우연일 확률이 58.2%나 됩니다. 그래서 Bonferroni 같은 보정을 걸어 진짜 살아남는 결과만 핵심 근거로 씁니다.</div></div>
+      <div class="term"><div class="t">ROC-AUC (모델이 얼마나 잘 구분하는가)</div><div class="d">성공할 사람과 실패할 사람 한 쌍을 무작위로 뽑았을 때, 모델이 성공할 사람에게 더 높은 점수를 줄 확률입니다. 0.5는 "동전 던지기"와 같고 1.0은 완벽합니다. 실무 기준은 보통 0.7 이상입니다.</div></div>
+    </div>
+    <p class="body">이 단계에서 가장 중요한 두 가지 결론은 다음과 같습니다.</p>
+    <ul class="body">
+      <li><b>가장 강한 근거 (토대)</b>: 셀러 수가 늘면 GMV(거래액)도 거의 같은 비율로 함께 늘어난다는 것을 품목·월 이원 고정효과
+        회귀로 확인했습니다(β = 0.93, 95% 신뢰구간 [0.677, 1.184], t = 7.20). "신규 셀러가 기존 셀러 매출을 나눠 갖기만 한다"는
+        가장 나쁜 시나리오(β=0)는 명세를 6가지로 바꿔도 전부 기각됩니다. 다만 <b>같은 시기의 상관관계이지 인과관계를 완전히
+        증명한 것은 아닙니다</b> — 확정하려면 실제 유치를 늘려보는 파일럿이 필요합니다.</li>
+      <li><b>머신러닝은 "예측"이 아니라 "교차 확인" 용도</b>: 계약 시점 정보만으로 개별 셀러가 90일 안에 팔지 예측하는 모델을
+        만들어봤지만 ROC-AUC 0.62로 실무 기준(0.7 이상)에 못 미쳤습니다. 그래서 <b>개별 셀러 점수 매기기용으로는 쓰지 않는다</b>고
+        정직하게 결론냈습니다. 대신 어떤 조건이 활성화 확률을 높이는지(오즈비)를 보면, 통계 검정에서 찾은 순서와
+        <b>완전히 같은 순서</b>가 나왔습니다 — 유통업자 × 중대형 온라인 사업자가 가장 활성화가 잘 됩니다. 서로 다른 방법이
+        같은 결론에 도달했으니 이 선별 기준을 믿고 써도 된다는 뜻입니다.</li>
+    </ul>
+    <div class="plain">
+      <div class="h">쉽게 말하면</div>
+      "정시 배송을 못 지키면 평점이 1.58점(5점 만점) 떨어진다"처럼 <b>효과크기를 앞세워 말하는 것</b>이, "p값이 0.001보다 작다"고
+      말하는 것보다 훨씬 이해하기 쉽고 실행에 바로 연결됩니다. 이 프로젝트는 발표할 때 항상 이 방식을 씁니다.
+    </div>
+    <a class="linkbox" href="step4_statistical_verification.html">→ 4·5단계 산출물 자세히 보기 (통계 검증 + 머신러닝 + 전체 검정 결과표)</a>
+  </div>
+
+  <!-- 6. 결론 -->
+  <div class="sec" id="step6">
+    <div class="sec-num">6단계 · 결론 · 액션 제안</div>
+    <h2>마케팅 전략 회의 자료 — 왜 지금, 어떤 판매자를 유치해야 회사에 이득인가</h2>
+    <div class="dek">이 단계는 "판매자에게 좋은 결론"이 아니라 "이 결론을 실행하면 회사에 어떤 이득이 있는가"를 중심으로 씁니다.</div>
+    <p class="body">회사가 얻는 이득은 크게 세 가지입니다.</p>
+    <ul class="body">
+      <li><b>매출 성장</b>: 셀러 수가 늘면 거래액(GMV)도 거의 같은 비율로 함께 늘어난다는 것을 통계적으로 확인했습니다(탄력성 β≈1).
+        "신규 셀러를 늘려봤자 기존 셀러끼리 매출을 나눠 가질 뿐"이라는 걱정은 데이터로 기각됐습니다.</li>
+      <li><b>영업 효율</b>: 아무 품목, 아무나 상담하지 않고 housewares·pet_shop을, 그중에서도 유통업자·중대형 온라인 사업자를
+        먼저 상담하면, 같은 영업 인력으로 더 많은 활성 셀러를 만들 수 있습니다.</li>
+      <li><b>매출 방어</b>: 정시 배송이 안 되면 평점이 크게 떨어진다는 것을 확인했으므로, 신규 셀러 온보딩 때 배송 교육을 강화하는
+        것이 곧 매출을 지키는 투자입니다.</li>
+    </ul>
+    <div class="result">
+      <div class="h">데이터 한계도 숨기지 않습니다</div>
+      <div class="b">① 셀러 수와 매출의 관계는 <b>상관관계</b>이지 인과관계를 완전히 증명한 것은 아닙니다(실제 파일럿 필요).
+        ② 개별 셀러의 성패를 점수로 예측할 수는 없습니다(ROC-AUC 0.62). ③ 이 결론은 마케팅 퍼널로 유입된 셀러(전체의 12.3%)에
+        한정됩니다. ④ 계약 이후 온보딩 과정에서 무슨 일이 있었는지에 대한 데이터가 없어, 온보딩 교육의 효과는 이번 분석만으로
+        검증할 수 없습니다.</div>
+    </div>
+    <a class="linkbox" href="step6_conclusion.html">→ 6단계 산출물 자세히 보기</a>
+  </div>
+
+  <!-- 7. 대시보드 -->
+  <div class="sec" id="step7">
+    <div class="sec-num">7단계 · 대시보드</div>
+    <h2>모든 결론을 한 화면에서 확인할 수 있게 만든 최종 요약본</h2>
+    <div class="dek">대시보드는 자체적으로 STEP 1(문제) → STEP 7(근거 확인)까지 이야기 순서로 다시 구성돼 있습니다 — 위에서 본 0~6단계
+      산출물의 핵심 결과를, 통계를 처음 보는 사람도 따라올 수 있는 형태로 압축한 최종본입니다.</div>
+
+    <p class="body">대시보드 안의 흐름은 다음과 같습니다.</p>
+    <div class="gatecard"><div class="gn">1</div><div class="gb"><b>문제</b> — 반기 평균으로 고객은 2.8배 늘었는데 셀러는 1.08배,
+      제자리였다는 것을 그래프로 보여줍니다.</div></div>
+    <div class="gatecard"><div class="gn">2</div><div class="gb"><b>성공 기준</b> — 계약이 아니라 "90일 내 첫 판매를 낸 셀러"로
+      성과를 센다는 것을 퍼널로 보여줍니다. 누적 활성화 곡선으로 "계약 후 며칠 만에 몇 %가 첫 판매를 냈는지"를 보여주는데,
+      90일 시점엔 44.1%지만 180일까지 늘려도 53.2%(+9.1%p), 데이터가 끝나는 268일까지 가도 56.6%뿐입니다 — <b>더 기다려도
+      거의 안 늘기 때문에</b> 90일을 판정 기준선으로 잡았습니다("시험 시간 90분인데 30분 만에 답안지를 걷어서 채점하지 않는다"는
+      것과 같은 이유로, 아직 90일이 안 지난 계약은 실패로 세지 않고 판정 대상에서 제외합니다). 실제 활성화까지 걸리는 기간은
+      중앙값 44일이라는 것도 함께 나옵니다.</div></div>
+    <div class="gatecard"><div class="gn">3</div><div class="gb"><b>어떤 품목 — 4단 게이트</b> — 71개 카테고리 중 거래 기준을
+      만족하는 40개 품목을 놓고, <b>①기회(수요-공급 갭 양수) → ②품질(평점 4.0+·정시율 90%+) → ③실행 가능(퍼널 계약 이력 존재) →
+      ④성과(활성화율이 평균 이상) → ⑤표본 가드(계약 20건 이상)</b> 순서로 걸러 최종 2개 품목(housewares·pet_shop)만 남깁니다.
+      각 단계에서 왜 몇 개가 떨어졌는지까지 카드로 보여줍니다.</div></div>
+    <div class="gatecard"><div class="gn">4</div><div class="gb"><b>어떻게 — 누구를·어디서·어느 채널로</b> — 사업 규모·형태별
+      활성화율(가장 강한 레버), 동일 주 배송 여부에 따른 배송일·평점 차이를 보여줍니다. 채널 차트는 특히 잘 만들어져 있는데,
+      가로축(계약 전환율)·세로축(활성화율)·원 크기(리드 수)로 채널을 버블로 흩뿌려서, <b>"채널은 계약을 싸게 따오는 데는 확실히
+      차이가 나지만(가로로 넓게 퍼짐), 계약 이후 활성화율에는 차이가 없다(세로로는 한 줄에 모여 있음)"</b>는 것을 그림 하나로
+      보여줍니다.</div></div>
+    <div class="gatecard"><div class="gn">5</div><div class="gb"><b>얼마나</b> — 목표 활성 셀러 최소 +43명을 세그먼트 활성화율로
+      나눠 필요 계약 73건을 구하고, 현행 계약 속도로 나눠 예상 소요 기간(약 10.7개월)까지 계산합니다. "필요 월평균 셀러 수"의
+      계산 과정 자체는 <b>step4_statistical_verification.html 4절</b>로 옮겨졌고, 여기 접이식 카드는 "후속 검토 — 공급이
+      따라갔다면 더 팔렸을 금액"(증분 GMV = 최근 6개월 GMV × 수요-공급 갭)이라는 <b>참고용 금액 추정</b>으로 바뀌었습니다 —
+      본 분석의 핵심 근거로 쓰지 않는다는 점을 카드 안에 명시해 뒀습니다.</div></div>
+    <div class="gatecard"><div class="gn">6</div><div class="gb"><b>결론과 실행 계획</b> — 한 문단 결론 + 4개 요약 카드 다음에,
+      <b>채택된 가설에서 직접 도출한 액션 제안 5개</b>를 근거 강도 순으로 카드로 나열합니다(1번이 가장 강한 근거·가장 저비용,
+      5번은 "하지 않기로 한 결정"). 그 아래 0~1개월 / 1~3개월 / 3~6개월 / 6개월+ 실행 로드맵이 이어집니다.</div></div>
+    <div class="gatecard"><div class="gn">7</div><div class="gb"><b>근거 확인 (필터·드릴다운)</b> — 위 결론을 뒷받침하는 19개
+      행(가지 A~D의 가설 검정 + 근거 E "토대·셀러↔GMV" 1건)을 원인 가지(A~D·토대)·판정(채택/보류/기각)별로 필터링해서 볼 수 있고,
+      칩마다 지금 조건에서 몇 건이 나오는지 숫자가 함께 표시됩니다. 상태 줄에는 "전체 19건 = 채택/보류·부분/기각" 개수가
+      6단계 이슈맵의 가지 수와 같은 집합이라는 것까지 확인해 주고, 행을 클릭하면 검정 방법·통계량·효과크기까지 펼쳐집니다.
+      다중비교 보정(Bonferroni)까지 걸어도 살아남는 8개 근거가 무엇인지 명확히 표시돼 있습니다.</div></div>
+
+    <p class="body">그 밖에 처음 보는 사람을 위한 장치들:</p>
+    <ul class="body">
+      <li><b>용어에 마우스를 올리면 바로 설명</b>: "활성화율", "탄력성 β", "효과크기" 같은 통계 용어는 점선 밑줄로 표시되어 있고,
+        마우스를 올리거나(터치 기기는 탭) 화면 위쪽 "숫자 읽는 법" 패널을 펼치면 비유로 풀어쓴 설명이 바로 나옵니다.</li>
+      <li><b>펼쳐 보는 Q&amp;A 카드</b>: "그 숫자 어디서 나왔냐"는 질문에 대비해, 계산식과 원인·결과 인과관계에 대한 예상 질문·답변을
+        평소엔 접어두고 필요할 때만 펼쳐볼 수 있게 만들었습니다.</li>
+      <li><b>색약 대응</b>: 빨강/초록 대신 파랑/주황(버밀리언) 조합을 쓰고, 색만이 아니라 <b>★(최종 대상)·△(기회는 있으나 탈락)</b>
+        같은 기호와 막대 위 숫자로도 같은 정보를 읽을 수 있게 했습니다.</li>
+      <li><b>데이터 정의·신선도·한계 카드</b>: 데이터가 언제 기준인지, 핵심 용어의 정의, 그리고 이 분석이 증명하지 "못하는" 부분
+        (인과관계 확정 아님, 개별 예측 불가, 마케팅 유입 12.3%에 한정 등)을 맨 아래에 숨기지 않고 적어뒀습니다.</li>
+    </ul>
+    <div class="analogy">
+      <div class="h">비유로 이해하기 — "효과크기"란?</div>
+      p-value가 "이 차이가 우연이 아니다"를 말해준다면, 효과크기는 "그래서 그 차이가 실제로 큰가, 작은가"를 말해줍니다.
+      키 차이로 치면, p-value는 "두 사람의 키가 다른 게 우연이 아니다"이고, 효과크기는 "그런데 그 차이가 1cm인지 20cm인지"에
+      해당합니다. 근거 확인 표의 막대그래프는 이 효과크기 크기 순으로 정렬되어 있어서, 어떤 원인이 통계적으로만 유의한 게 아니라
+      실제로도 중요한지를 한눈에 비교할 수 있습니다.
+    </div>
+    <a class="linkbox" href="step7_dashboard.html">→ 7단계 산출물 자세히 보기 (인터랙티브 대시보드)</a>
+  </div>
+
+  <!-- FAQ / 용어사전 -->
+  <div class="sec" id="faq">
+    <div class="sec-num">용어 사전 · FAQ</div>
+    <h2>전체에서 자주 나오는 질문 모음</h2>
+    <div class="faqitem"><div class="q">Q. "활성화"가 정확히 뭔가요?</div>
+      <div class="a">계약을 맺은 셀러가 <b>계약 후 90일 안에 첫 주문(판매)을 낸 것</b>을 말합니다. 계약만 하고 한 건도 안 판 셀러는
+        활성화되지 않은 것으로 봅니다. 90일을 쓰는 이유는, 실제로 활성화된 셀러들의 계약→첫판매 소요일이 중앙값 44일이라
+        90일이면 충분히 여유 있게 관찰할 수 있기 때문입니다.</div></div>
+    <div class="faqitem"><div class="q">Q. 고객이 2.8배 늘었다는 것과 8.2배 늘었다는 말을 둘 다 본 것 같은데, 뭐가 맞나요?</div>
+      <div class="a">기준을 어떻게 잡느냐에 따라 다른 숫자입니다. <b>2.8배(공식 기준)</b>는 2017년 상반기 월평균과 2018년 상반기
+        월평균을 비교한 값이고, <b>8.2배</b>는 2017년 1월과 2018년 8월, 단 두 달의 끝값만 비교한 값입니다. 2017년 1월은 플랫폼
+        초기라 표본(주문 수)이 작아서 왜곡이 크기 때문에, 이 프로젝트는 반기 평균 기준(2.8배)을 공식 수치로 씁니다 — 대시보드
+        본문에도 "단월 끝값으로 세면 8.2배가 나오지만 쓰지 않는다"는 설명이 각주로 명시돼 있습니다.</div></div>
+    <div class="faqitem"><div class="q">Q. p-value가 0.05보다 작으면 무조건 중요한 발견인가요?</div>
+      <div class="a">아닙니다. p-value는 "우연이 아니다"만 말해줄 뿐, "그 차이가 실제로 큰지"는 말해주지 않습니다. 그래서 이 프로젝트는
+        항상 효과크기를 같이 봅니다. 표본이 아주 크면 아주 사소한 차이도 p&lt;0.05가 나올 수 있습니다.</div></div>
+    <div class="faqitem"><div class="q">Q. 검정을 17번이나 했는데, 그중 우연히 유의하게 나온 게 있는 거 아닌가요?</div>
+      <div class="a">충분히 있을 수 있는 걱정이라 이 프로젝트도 직접 확인했습니다. 진짜 효과가 하나도 없어도 17번 검정하면
+        58.2% 확률로 최소 하나는 우연히 유의해집니다. 그래서 Bonferroni 보정(더 엄격한 기준)을 걸었고, 그래도 <b>8개 근거는
+        살아남습니다</b> — 셀러 선별(사업 규모·형태), 배송 품질, 채널 계약률 같은 핵심 결론은 어느 기준으로 봐도 흔들리지 않습니다.
+        보정에서 탈락한 2개는 모두 "품목" 관련 근거라, 품목은 결론의 핵심 레버가 아니라 "후보를 고르는 출발점"으로만 쓴다고
+        명확히 선을 그었습니다.</div></div>
+    <div class="faqitem"><div class="q">Q. 왜 머신러닝 모델을 만들어놓고 안 쓴다고 하나요?</div>
+      <div class="a">모델의 예측력(ROC-AUC 0.62)이 실무에서 쓸 만한 수준(보통 0.7 이상)에 못 미치기 때문입니다. 억지로 "이 모델이 좋다"고
+        우기지 않고, "이 정보만으로는 개별 예측이 어렵다"는 것 자체를 정직한 결론으로 삼았습니다. 대신 이 모델은 통계 검정 결과가
+        맞는지 다른 방법으로 재확인하는 용도로 활용했습니다.</div></div>
+    <div class="faqitem"><div class="q">Q. "4단 게이트"는 뭔가요?</div>
+      <div class="a">40개 후보 품목을 <b>기회 → 품질 → 실행 가능 → 성과</b>(+ 표본 가드) 순서로 걸러서 최종 유치 대상 2개
+        (housewares·pet_shop)만 남기는 절차입니다. 단일 점수로 순위를 매기지 않는 이유는, 그렇게 하면 "독점 품목"(셀러 한두
+        명이 시장을 꽉 잡고 있어 사실은 더 유치할 필요가 없는 품목)이 상위로 올라오는 착시가 생기기 때문입니다.</div></div>
+    <div class="faqitem"><div class="q">Q. "가설 트리"와 "로직 트리(이슈 트리)"는 뭐가 다른가요?</div>
+      <div class="a">가설 트리는 "어떤 원인이 있을 수 있는가"를 빠짐없이 나열하고 검증하는 도구이고, 로직 트리는 "그 원인이 확인된 다음,
+        목표 숫자에 도달하려면 무엇을 얼마나 바꿔야 하는가"를 사칙연산으로 계산하는 도구입니다. 가설 트리가 "왜?"를 묻는다면
+        로직 트리는 "그래서 얼마나?"를 계산합니다.</div></div>
+    <div class="faqitem"><div class="q">Q. "퍼널 유입 셀러 12.3%"라는 게 무슨 뜻인가요?</div>
+      <div class="a">실제로 물건을 파는 셀러는 3,095명인데, 그중 우리가 "어느 마케팅 채널로, 언제 계약했는지"를 알 수 있는 셀러는
+        380명(12.3%)뿐입니다. 나머지는 직접 가입 등 다른 경로로 들어온 셀러라 이번 분석 대상이 아닙니다. 그래서 이 프로젝트의 결론은
+        "마케팅으로 유치하는 셀러"에 한정된 이야기입니다.</div></div>
+    <div class="faqitem"><div class="q">Q. GMV가 늘면 회사(플랫폼) 수익도 그만큼 느는 건가요?</div>
+      <div class="a">아닙니다. GMV는 <b>거래액</b>(상품이 팔린 금액의 합)이지 회사 매출이 아닙니다. 회사 수익은 여기에 수수료율을
+        곱해야 나오는데, 이 프로젝트에는 수수료율 데이터가 없어서 회사 수익으로 환산하지 않았습니다 — 없는 데이터를 추정해서
+        채우지 않고 "환산 불가"로 정직하게 남겨둔 부분입니다.</div></div>
+    <div class="faqitem"><div class="q">Q. 이 문서와 0~7단계 산출물, 뭘 먼저 봐야 하나요?</div>
+      <div class="a">처음 보는 사람은 이 문서를 먼저 끝까지 읽고 전체 그림을 잡은 다음, 관심 있는 단계의 "자세히 보기" 링크를 눌러
+        원본 산출물(더 상세한 수치와 표)을 보는 순서를 추천합니다. 발표에서 결론만 빠르게 보여줘야 한다면 7단계 대시보드 하나만
+        열어도 이야기가 처음부터 끝까지 이어집니다.</div></div>
+  </div>
+
+  <div class="finalbox">
+    <h3>다 읽으셨다면</h3>
+    <p>이제 관심 있는 단계의 산출물을 자유롭게 살펴보세요. 발표 때는 <b>7단계 대시보드</b> 하나로 전체 스토리를 보여줄 수 있고,
+      질문이 나오면 근거 확인 표(필터·드릴다운)와 계산식 카드를 그 자리에서 펼쳐 답할 수 있습니다.</p>
+  </div>
+
+</div>
+</body>
+</html>

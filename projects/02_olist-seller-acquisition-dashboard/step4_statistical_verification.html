@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4·5단계 통계 검증 · 머신러닝 | Seller OS</title>
+<!-- 웹폰트는 렌더를 막지 않게 비동기로 — CDN이 막혀도 시스템 한글 폰트로 즉시 그려진다 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      media="print" onload="this.media='all'">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5F6F8;--card:#FFF;--border:#E6E2E2;--line:#C9C9D1;
+  --t1:#2B2B30;--t2:#4A4A52;--t3:#6A6A73;--t4:#8A8A94;
+  --c1:#7E2124;--c3:#C63B3F;
+  --navy:#31538F;--navy-l:#6E8CC4;--navy-xl:#A8BBDD;--purple:#6E47A8;
+  --green:#1B7F49;--amber:#8A6100;teal:#0d9488;
+  --teal:#0d9488;--teal-bg:#f0fdfa;
+  --green-bg:#E8F5EE;--red-bg:#FBEAE8;--amber-bg:#F6F0E2;--navy-bg:#EDF1F8;--grey-bg:#EFEFF1;
+  --font:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',system-ui,-apple-system,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:15px;padding:24px 28px 46px}
+.wrap{max-width:1230px;margin:0 auto}
+
+.stagenav{display:flex;align-items:stretch;gap:0;margin-bottom:13px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.sn{flex:1;min-width:104px;padding:9px 11px;font-size:11px;color:var(--t4);text-decoration:none;
+  border-right:1px solid var(--border);line-height:1.4;transition:background .12s}
+.sn:last-child{border-right:none}
+.sn:hover{background:#FAFAFB}
+.sn .num{display:block;font-size:10px;font-weight:800;letter-spacing:.04em;margin-bottom:2px}
+.sn .nm{display:block;font-size:11.5px;font-weight:600;color:var(--t3)}
+.sn.done .num{color:var(--green)} .sn.done .nm{color:var(--t2)}
+.sn.cur{background:var(--c1);border-right-color:var(--c1)}
+.sn.cur .num{color:rgba(255,255,255,.7)} .sn.cur .nm{color:#fff;font-weight:800}
+
+.hd{background:var(--c1);color:#fff;border-radius:12px;padding:17px 22px;margin-bottom:13px}
+.stagetag{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);
+  padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:800;letter-spacing:.03em;margin-bottom:7px}
+.hd h1{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.hd .sub{font-size:12.5px;color:rgba(255,255,255,.78);margin-top:6px;line-height:1.6}
+.hd .sub b{color:#fff}
+
+.lane{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px 20px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:14px}
+.lane-h{display:flex;align-items:baseline;gap:10px;margin-bottom:13px;flex-wrap:wrap}
+.lane-h .t{font-size:15.5px;font-weight:800;letter-spacing:-.2px}
+.lane-h .m{font-size:12px;color:var(--t3)}
+
+/* 용어 카드 */
+.termgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.term{border:1px solid var(--border);border-radius:9px;padding:10px 12px;background:#FCFCFD}
+.term .t{font-size:12.5px;font-weight:800;color:var(--c1)}
+.term .d{font-size:10.5px;color:var(--t3);line-height:1.55;margin-top:4px}
+
+/* plain language box */
+.plain{background:var(--teal-bg);border-left:4px solid var(--teal);border-radius:8px;
+  padding:10px 14px;margin:10px 0;font-size:12px;color:var(--t2);line-height:1.65}
+.plain .h{font-size:11px;font-weight:800;color:var(--teal);margin-bottom:4px;letter-spacing:.02em}
+
+/* verdict box */
+.verdict{border-left:4px solid var(--teal);background:var(--teal-bg);border-radius:8px;
+  padding:11px 15px;margin-top:10px}
+.verdict .h{font-size:11px;font-weight:800;color:var(--teal);margin-bottom:5px;letter-spacing:.03em}
+.verdict .b{font-size:12.5px;color:var(--t1);line-height:1.65}
+.verdict .b b{color:var(--c1)}
+
+/* 비교 카드 (before/after) */
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+.cmpcard{border:1px solid var(--border);border-radius:9px;padding:12px 14px}
+.cmpcard.old{background:#FBFAFA;border-color:#EADFDF}
+.cmpcard.new{background:var(--teal-bg);border-color:rgba(13,148,136,.25)}
+.cmpcard .tag{font-size:10px;font-weight:800;letter-spacing:.05em;margin-bottom:6px}
+.cmpcard.old .tag{color:var(--t4)}
+.cmpcard.new .tag{color:var(--teal)}
+.cmpcard .v{font-size:18px;font-weight:800;letter-spacing:-.3px}
+.cmpcard .s{font-size:11px;color:var(--t3);margin-top:4px;line-height:1.5}
+
+/* 결과표 */
+.tbl{width:100%;border-collapse:collapse;font-size:11.8px}
+.tbl th{text-align:left;font-size:10.8px;color:var(--t3);padding:7px 8px;font-weight:700;
+  border-bottom:1.5px solid var(--border);white-space:nowrap}
+.tbl th.r{text-align:right}
+.tbl td{padding:6.5px 8px;color:var(--t2);border-bottom:1px solid #F5F6F8;line-height:1.5}
+.tbl td.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl td:first-child{color:var(--t1);font-weight:700}
+.tbl tr.sec td{background:#FAFAFB;font-weight:800;color:var(--t1);font-size:11.3px}
+.wide{overflow-x:auto}
+.pillx{font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.pillx.ok{background:var(--green-bg);color:var(--green)}
+.pillx.no{background:var(--red-bg);color:var(--c3)}
+.pillx.hold{background:var(--amber-bg);color:var(--amber)}
+
+.foot{font-size:11px;color:var(--t4);line-height:1.7;margin-top:16px;padding-top:13px;border-top:1px solid var(--border)}
+.foot b{color:var(--t3)}
+h3{font-size:14px;font-weight:800;margin:14px 0 6px;letter-spacing:-.2px;color:var(--t1)}
+h3:first-child{margin-top:0}
+p.lead{font-size:12.5px;color:var(--t2);line-height:1.7;margin-bottom:8px}
+@media (max-width:1050px){
+  .termgrid{grid-template-columns:1fr 1fr}
+  .cmp{grid-template-columns:1fr}
+}
+
+/* 좁은 화면에서 가로로 밀리지 않게 */
+*,*:before,*:after{min-width:0}
+.wide,.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:720px){body{padding:14px 12px 32px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="stagenav">
+  <a class="sn done" href="step0_eda.html"><span class="num">EDA</span><span class="nm">데이터 탐색</span></a>
+  <a class="sn done" href="step1_hypothesis_tree.html"><span class="num">1단계</span><span class="nm">가설 트리</span></a>
+  <a class="sn done" href="step2_metric_map.html"><span class="num">2단계</span><span class="nm">지표 지도 (AARRR)</span></a>
+  <a class="sn done" href="step3_logic_tree.html"><span class="num">3단계</span><span class="nm">원인 분해 (로직·이슈 트리)</span></a>
+  <a class="sn cur" href="step4_statistical_verification.html"><span class="num">4·5단계</span><span class="nm">통계 검증 · 머신러닝</span></a>
+  <a class="sn done" href="step6_conclusion.html"><span class="num">6단계</span><span class="nm">결론 · 액션 제안</span></a>
+  <a class="sn done" href="step7_dashboard.html"><span class="num">7단계</span><span class="nm">대시보드</span></a>
+  </div>
+
+  <div class="hd">
+    <div class="stagetag">4·5단계 산출물 · 통계 검증 + 머신러닝 (7단계 중 4~5)</div>
+    <h1>통계 검증과 머신러닝 — 1·3단계에서 주장한 것이 데이터로 실제 확인되는가</h1>
+    <div class="sub">
+      가정(정규성·등분산성)이 안 맞는 경우가 많아 <b>비모수 검정을 기본으로</b> 쓴다 · 모든 결과는 <b>유의성 + 효과크기</b>를 함께 보고한다 ·
+      팀 간 수치 불일치 1건을 원인까지 추적해 해소했다 · <b>5단계 머신러닝을 §5에 통합</b>했다
+    </div>
+  </div>
+
+  <!-- 용어 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">이 페이지를 읽기 전에 — 용어 5개</span>
+      <span class="m">통계를 잘 몰라도 읽을 수 있도록, 아래 다섯 단어의 뜻만 알고 가면 된다</span>
+    </div>
+    <div class="termgrid">
+      <div class="term"><div class="t">p-value</div><div class="d">"이 차이가 우연일 확률." 0.05보다 작으면 관례적으로 "우연이 아니다(유의하다)"라고 본다.</div></div>
+      <div class="term"><div class="t">효과크기</div><div class="d">차이가 <b>얼마나 큰지</b>. p-value는 "있다/없다"만 말하고, 효과크기가 "커봤자 얼마나 큰가"를 말한다. 표본이 크면 아주 작은 차이도 p&lt;0.05가 나오므로 반드시 같이 봐야 한다.</div></div>
+      <div class="term"><div class="t">신뢰구간(CI)</div><div class="d">"진짜 값이 있을 법한 범위." 범위가 좁을수록 확신도가 높다. 범위에 0이 걸쳐 있으면 "차이가 없다"는 것도 배제 못 한다는 뜻.</div></div>
+      <div class="term"><div class="t">log-rank 검정</div><div class="d">"누가 더 먼저 팔기 시작하는가"처럼 <b>시간이 걸리는 사건</b>을 비교하는 방법. 단순히 "90일 안에 팔았다/못 팔았다"만 보는 것보다 정보를 더 쓴다.</div></div>
+      <div class="term"><div class="t">Cohen's h</div><div class="d">두 비율(%) 차이의 효과크기. 0.2 미만은 작음, 0.5 안팎은 중간, 0.8 이상은 큰 차이로 본다.</div></div>
+    </div>
+  </div>
+
+  <!-- §1 D-1 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§1 · D-1 로그순위 수치, 우리 팀과 협업본이 서로 달랐던 이유</span>
+      <span class="m">"어느 쪽이 틀렸나"가 아니라 <b>작은 표본을 처리하는 방식의 차이</b>였다</span>
+    </div>
+    <p class="lead">품목 세그먼트별로 활성화 속도가 다른지 보는 검정에서, 우리 팀 문서는 χ²=27.368(dof=14, n=661)을 썼고
+      협업본은 χ²=25.803(dof=13, n=788)을 썼다. 두 그룹이 계약 건수가 15건 미만인 <b>작은 세그먼트</b>를 다르게 처리한 결과였다.</p>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th></th><th>우리 팀 수치</th><th>협업본 수치</th></tr></thead>
+      <tbody>
+        <tr><td>소표본(15~20건 미만) 세그먼트 처리</td><td>제외한다 (필터)</td><td>'기타'로 합친다 (병합)</td></tr>
+        <tr><td>실제 검정에 쓰인 건수</td><td>661건 (128건 제외)</td><td>788건 (전량 사용)</td></tr>
+        <tr><td>세그먼트 수 → 자유도</td><td>15군 → 14</td><td>14군 → 13</td></tr>
+        <tr><td>χ² · p-value</td><td>27.368 · p=0.0172</td><td>25.803 · p=0.0181</td></tr>
+      </tbody>
+    </table></div>
+    <div class="verdict">
+      <div class="h">그래서 뭐 — 결론에 영향 없음, 표준은 병합 방식으로 통일</div>
+      <div class="b">21가지 조합(3개 모집단 × 7개 소표본 처리 방식)으로 다 돌려봐도 <b>obs&gt;0 계열은 전부 p&lt;0.05</b>다.
+        "품목 세그먼트별로 활성화 속도가 다르다"는 결론은 어느 방식을 써도 바뀌지 않는다.
+        다만 앞으로는 <b>표본을 버리지 않는 병합 방식(χ²=25.803, n=788)을 공식 수치로 통일</b>하고, 필터 방식은 민감도 확인용으로 각주 처리한다.</div>
+    </div>
+  </div>
+
+  <!-- §2 스팟체크 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§2 · 새로 나온 숫자들, 원본 데이터로 다시 계산해도 똑같이 나오는가</span>
+      <span class="m">협업 과정에서 새로 등장한 수치 6개를 원본 CSV로 독립 재계산했다</span>
+    </div>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>항목</th><th>주장</th><th>재계산 결과</th><th>판정</th></tr></thead>
+      <tbody>
+        <tr><td>A-1 정시배송 → 평점</td><td>격차 1.576점 (4.328 vs 2.752)</td><td>동일 · 효과크기 r=0.510(중간~큰 효과)</td><td><span class="pillx ok">일치</span></td></tr>
+        <tr><td>A-2 품목별 평점 차이</td><td>Kruskal-Wallis H=299.6</td><td>H=299.557, p=7.9e-43</td><td><span class="pillx ok">일치</span></td></tr>
+        <tr><td>A-3 배송소요일 → 평점</td><td>ρ=−0.227(주문) / −0.674(카테고리)</td><td>동일</td><td><span class="pillx ok">일치</span></td></tr>
+        <tr><td>D-2 housewares 활성화율</td><td>61.0%, p=0.0052(자신 제외 평균 대비)</td><td>동일 · Cohen's h=+0.341(전체평균 대비) / +0.374(자신제외 대비) — 기준을 명시해 병기</td><td><span class="pillx ok">일치</span></td></tr>
+        <tr><td>D-3 pet_shop 활성화율</td><td>53.8%, p=0.330</td><td>동일 · 신뢰구간이 전체 평균을 포함해 "평균보다 높다"고 말할 수 없음</td><td><span class="pillx ok">일치</span></td></tr>
+        <tr><td>5단계 ML 결과</td><td>로지스틱 회귀 4모델, ROC-AUC 0.62 안팎</td><td>동일 · 아래 <a href="#ml">§5 머신러닝</a>에 전문 수록</td><td><span class="pillx ok">일치</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="plain"><div class="h">쉽게 말하면</div>발표 자료에는 p-value보다 <b>"정시 배송이 안 되면 평점이 1.58점(5점 만점) 떨어진다"</b>처럼 효과크기를 앞세우는 게 더 와닿는다. p-value는 "우연이 아니다"만 말해줄 뿐, 차이가 얼마나 큰지는 말해주지 않기 때문이다.</div>
+  </div>
+
+  <!-- §3 탄력성 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§3 · 셀러 수가 늘면 매출(GMV)도 정말 느는가 — 탄력성 β의 방법론</span>
+      <span class="m">"셀러를 늘려도 기존 셀러끼리 나눠 갖기만 하는 것 아니냐"는 반론에 대한 답</span>
+    </div>
+    <p class="lead">품목 40개 × 월별 데이터(737개 관측치)로 "셀러 수가 1% 늘면 GMV가 몇 % 느는가(β)"를 추정했다.
+      품목·월 고정효과를 넣어 계절성이나 품목 고유 특성 때문에 생기는 가짜 상관을 제거한 회귀분석이다.</p>
+    <div class="cmp">
+      <div class="cmpcard old">
+        <div class="tag">기존 방식 · 과신된 값</div>
+        <div class="v">β=0.93, CI [0.818, 1.043]</div>
+        <div class="s">고전 OLS 표준오차. 같은 품목의 월별 관측이 서로 독립이라고 가정하는데, 실제로는 품목 고유의 충격이 여러 달에 걸쳐 남아있어 <b>이 상관을 무시하면 구간이 실제보다 좁게(과신되게) 나온다.</b></div>
+      </div>
+      <div class="cmpcard new">
+        <div class="tag">교체된 값 · 정직한 값</div>
+        <div class="v">β=0.93, CI [0.677, 1.184]</div>
+        <div class="s">품목 클러스터 표준오차. 품목 단위의 상관을 허용해 구간이 넓어졌다. 점추정치(0.93)는 그대로지만, <b>"0.93%"라고 소수점까지 확정된 값처럼 쓰지 않고 "대략 1:1로 움직인다"</b>로 표현한다.</div>
+      </div>
+    </div>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>대안 명세</th><th>β</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>기본 명세(품목·월 고정효과)</td><td class="r">0.93</td><td>표준 채택안</td></tr>
+        <tr><td>③ 수준 회귀</td><td class="r">1.15</td><td>1을 넘음 — 역인과(수요↑ → 셀러 유입) 가능성과 정합</td></tr>
+        <tr><td>④ 반기 집계</td><td class="r">1.28</td><td>동일 이유로 1 초과</td></tr>
+        <tr><td>그 외 명세 범위</td><td class="r">0.76 ~ 1.28</td><td>6개 대안 명세 전체 범위</td></tr>
+      </tbody>
+    </table></div>
+    <div class="verdict">
+      <div class="h">그래서 뭐 — 인과는 확정 못 해도, "파이 고정"은 확실히 아니다</div>
+      <div class="b">모든 명세에서 <b>β=0은 기각</b>된다(t=7.20) → "신규 셀러가 늘어도 기존 셀러 매출만 갈라 먹는다"는 반론은 기각.
+        대부분의 명세에서 β=1과 구별되지 않아 <b>"셀러 수와 거래액은 대략 1:1로 함께 움직인다"</b>는 서술은 유지 가능.
+        다만 이 값은 <b>동시기 상관</b>이라 인과 방향(셀러가 늘어서 GMV가 늘었는지, GMV가 늘어서 셀러가 들어왔는지)은 구분하지 못한다 — 인과를 확정하려면 실제로 유치를 늘려보는 파일럿이 필요하다.</div>
+    </div>
+  </div>
+
+  <!-- §4 기준선 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§4 · 목표 셀러 수 계산의 기준선(298 / 347), 이번에 원본 데이터로 재현 완료</span>
+      <span class="m">지난 검증에서 "재현 안 됨"으로 보고됐던 유일한 항목 — 정의를 다시 찾아 확정했다</span>
+    </div>
+    <p class="lead">6단계·7단계의 "+34명 / +9명" 목표는 "월평균 활동 셀러 1인당 GMV가 2017년 하반기 수준으로 돌아오려면
+      몇 명이 더 필요한가"로 계산된다. 그런데 그 <b>기준선 숫자(298, 347)</b>가 어떻게 나온 값인지 정의가 문서화돼 있지 않아 여러 창(window)으로 시도해도 재현되지 않았었다.</p>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>품목</th><th>정의</th><th class="r">문서값</th><th class="r">재현값</th><th>판정</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="1">housewares</td><td>월평균 셀러당 GMV, 2018-03~08(최근)</td><td class="r">365</td><td class="r">365.1</td><td><span class="pillx ok">일치</span></td></tr>
+        <tr><td>housewares</td><td>월평균 셀러당 GMV, 2017-07~12(기준선)</td><td class="r">298</td><td class="r">297.7</td><td><span class="pillx ok">재현 완료</span></td></tr>
+        <tr><td>pet_shop</td><td>월평균 셀러당 GMV, 2018-03~08(최근)</td><td class="r">424</td><td class="r">423.8</td><td><span class="pillx ok">일치</span></td></tr>
+        <tr><td>pet_shop</td><td>월평균 셀러당 GMV, 2017-07~12(기준선)</td><td class="r">347</td><td class="r">347.3</td><td><span class="pillx ok">재현 완료</span></td></tr>
+        <tr><td>office_furniture (교차검증용)</td><td>월평균 셀러당 GMV, 2017-07~12(기준선)</td><td class="r">2,132</td><td class="r">2,131.9</td><td><span class="pillx ok">재현 완료</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="verdict">
+      <div class="h">확정된 정의</div>
+      <div class="b"><b>월평균 셀러당 GMV = (창 안의 월별 카테고리 총 GMV 평균) ÷ (창 안의 월별 활동 셀러 수 평균)</b>.
+        "활동 셀러 수"는 그 상품 카테고리에서 그 달에 한 건이라도 판 <b>모든 셀러</b>(퍼널 유입 여부와 무관)를 매달 세어 6개월 평균을 낸 것이며,
+        총 GMV도 매달의 평균을 쓴다 — 셀러별 총액을 낸 뒤 중앙값을 구하는 방식이 아니다. 이 정의로 housewares·pet_shop·office_furniture
+        3개 품목 <b>모두</b> 문서값과 소수점 첫째 자리까지 일치해, 이전에 "재현 실패"로 보고됐던 항목이 완전히 해소됐다.</div>
+    </div>
+  </div>
+
+
+  <!-- §5 머신러닝 (5단계 통합) -->
+  <div class="lane" id="ml">
+    <div class="lane-h">
+      <span class="t">§5 · 5단계 머신러닝 — 선별 규칙을 세 번째 방법으로 검증한다</span>
+      <span class="m">모델을 <b>산출물로 내놓기 위해서가 아니라</b>, 통계 검정의 결론이 다른 방법으로도 재현되는지 보려고 돌렸다</span>
+    </div>
+    <p class="lead"><b>문제 정의</b> — 계약 시점에 알 수 있는 정보만으로 그 셀러가 90일 안에 첫 판매를 낼지 예측한다.
+      모집단은 활성화 판정 코호트 <b>667건</b>(라벨이 정의되는 유일한 집합), 특징은 <b>계약 시점에 확정되는 정보만</b>
+      쓴다 — 첫 주문일·GMV·리뷰는 결과에서 파생되므로 <b>누수 방지</b>를 위해 제외했다.
+      로지스틱 회귀 + 계층 5-fold 교차검증이며, 표본이 작아 폴드 간 표준편차를 함께 본다.</p>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>모델</th><th class="r">특징 수</th><th class="r">ROC-AUC</th><th class="r">PR-AUC</th><th class="r">F1</th><th>해석</th></tr></thead>
+      <tbody>
+        <tr><td>기준선 (사전확률만)</td><td class="r">—</td><td class="r">0.500</td><td class="r">0.441</td><td class="r">—</td><td>정보 없음</td></tr>
+        <tr><td>모델1 — 사업 규모 + 형태</td><td class="r">11</td><td class="r"><b>0.619 ± 0.049</b></td><td class="r">0.540</td><td class="r">0.545</td><td>원변수 2개(사업 규모·형태)만으로 기준선을 넘는다</td></tr>
+        <tr><td>모델2 — + 유입채널 + 품목세그먼트</td><td class="r">40</td><td class="r">0.617 ± 0.034</td><td class="r">0.543</td><td class="r">0.470</td><td>특징을 11→40개로 늘려도 <b>개선 없음</b></td></tr>
+        <tr><td>모델3 — + 성향 라벨</td><td class="r">45</td><td class="r">0.609 ± 0.038</td><td class="r">0.536</td><td class="r">0.464</td><td><b>오히려 하락</b> — 카이제곱·log-rank의 기각과 일치</td></tr>
+        <tr><td>모델4 — 모델2 + 리드 소요일</td><td class="r">41</td><td class="r">0.621 ± 0.030</td><td class="r">0.551</td><td class="r">0.495</td><td>미미한 개선</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>계수(오즈비) — 통계 검정과 같은 방향인가</h3>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>특징</th><th class="r">오즈비</th><th>읽는 법</th><th>대응하는 검정</th></tr></thead>
+      <tbody>
+        <tr><td>lead_type = online_big</td><td class="r"><b>2.06배</b></td><td>중대형 온라인은 활성화 확률이 2배 높다</td><td>B-1 (V=0.222)</td></tr>
+        <tr><td>business_type = reseller</td><td class="r"><b>1.53배</b></td><td>유통이 제조보다 높다</td><td>B-2 (V=0.145)</td></tr>
+        <tr><td>lead_type = offline</td><td class="r"><b>0.46배</b></td><td>오프라인 단독은 절반 이하</td><td>B-1</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="plain"><div class="h">쉽게 말하면</div>
+      카이제곱은 변수 하나만 떼어놓고 보지만, 모델은 <b>다른 변수를 다 넣은 상태에서</b> 그 변수가 추가로 얼마나 기여하는지를 잰다.
+      질문이 다른데 <b>답이 같게 나왔다</b> — 그래서 "유통 × 중대형 온라인을 먼저 상담한다"는 규칙을 믿을 수 있다.</div>
+
+    <div class="verdict">
+      <div class="h">그래서 뭐 — 예측 모델은 도입하지 않는다. 그 판단 자체가 결론이다</div>
+      <div class="b">
+        ① <b>개별 예측 모델로는 쓸 수 없다.</b> ROC-AUC 0.62는 실무 스코어링 기준(통상 0.7+)에 못 미친다.
+        특징을 11개에서 40개로 늘려도 개선이 없다는 것은 <b>모델이 아니라 데이터의 한계</b>다 —
+        예측력이 확인된 객관 항목이 92% 이상 비어 있어 넣을 재료가 없다.<br>
+        ② <b>성향 라벨은 세 방법 모두에서 무용하다.</b> 카이제곱 p=0.605 · log-rank p=0.628 ·
+        <b>ML은 넣으면 AUC가 0.008 떨어진다</b>. 기각 판정이 방법 하나에 의존하지 않는다.<br>
+        ③ 따라서 활성화 확률을 점수로 매겨 리드를 정렬하지 않고,
+        <b>"유통 × 중대형 온라인을 먼저 상담한다"는 단순 규칙</b>을 쓴다 — 데이터가 지지하는 수준에 맞는 사용법이다.<br>
+        <span style="color:var(--t3)">가이드라인은 "ML을 적용하지 않기로 한 결정도 정당한 결론"이라고 했다.
+        본 프로젝트는 <b>적용한 뒤 보류를 판단</b>했으므로 판단 근거를 수치로 제시할 수 있다.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- §6 결과 요약표 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§6 · 전체 검정 결과 요약</span>
+      <span class="m">1단계 가설트리의 모든 노드를 한 표로 — 자세한 개별 근거는 <a href="step1_hypothesis_tree.html">1단계</a> 참고</span>
+    </div>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>가지</th><th>ID</th><th>주장</th><th>검정</th><th>효과크기</th><th>판정</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="6">A · 품질</td><td>A-1</td><td>정시 실패→평점 하락</td><td>Mann-Whitney p&lt;1e-300</td><td>격차 1.58점, r=0.51</td><td><span class="pillx ok">채택</span></td></tr>
+        <tr><td>A-2</td><td>품목별 평점 차이</td><td>Kruskal-Wallis p=7.9e-43</td><td>H=299.6</td><td><span class="pillx ok">채택</span></td></tr>
+        <tr><td>A-3</td><td>배송일→평점</td><td>Spearman p&lt;1e-300</td><td>ρ=−0.227~−0.674</td><td><span class="pillx ok">채택</span></td></tr>
+        <tr><td>A-4</td><td>동일 주 배송</td><td>기술통계</td><td>0.19점 차</td><td><span class="pillx ok">채택</span></td></tr>
+        <tr><td>A-5</td><td>초기 품질→지속</td><td>Spearman p=2.4e-6</td><td>ρ=+0.169(작음)</td><td><span class="pillx hold">부분채택</span></td></tr>
+        <tr><td>A-6</td><td>A-1의 집계수준 의존성</td><td>Spearman p=0.133</td><td>ρ=0.248(비유의)</td><td><span class="pillx hold">주의</span></td></tr>
+        <tr><td rowspan="4">B · 선별</td><td>B-1</td><td>사업 규모</td><td>χ²=32.0 p=5.9e-6</td><td>V=0.222</td><td><span class="pillx ok">채택</span></td></tr>
+        <tr><td>B-2</td><td>사업 형태</td><td>χ²=13.9 p=1.9e-4</td><td>V=0.145</td><td><span class="pillx ok">채택</span></td></tr>
+        <tr><td>B-3</td><td>성향 라벨</td><td>χ²/log-rank/ML 3종 p&gt;0.05</td><td>V=0.061, AUC−0.008</td><td><span class="pillx no">기각</span></td></tr>
+        <tr><td>B-4</td><td>자기신고 항목</td><td>결측 91.8~92.5%</td><td>—</td><td><span class="pillx hold">측정불가</span></td></tr>
+        <tr><td rowspan="3">C · 채널</td><td>C-1</td><td>채널→계약률</td><td>χ²=140.7 p=3.0e-25</td><td>V=0.133</td><td><span class="pillx ok">채택</span></td></tr>
+        <tr><td>C-2</td><td>채널→활성화율</td><td>이진 p=0.069, log-rank p=0.111</td><td>—</td><td><span class="pillx no">기각</span></td></tr>
+        <tr><td>C-3</td><td>품목별 채널 편중</td><td>housewares p=0.23, pet_shop p=0.28</td><td>—</td><td><span class="pillx no">기각</span></td></tr>
+        <tr><td rowspan="5">D · 품목</td><td>D-1</td><td>세그먼트별 활성화 속도</td><td>log-rank(병합) p=0.0181</td><td>χ²=25.8(13)</td><td><span class="pillx ok">채택</span></td></tr>
+        <tr><td>D-2</td><td>housewares 활성화율</td><td>binomial p=0.0052</td><td>h=+0.341</td><td><span class="pillx ok">채택</span></td></tr>
+        <tr><td>D-3</td><td>pet_shop 활성화율</td><td>binomial p=0.330</td><td>CI가 평균 포함</td><td><span class="pillx hold">판정보류</span></td></tr>
+        <tr><td>D-4</td><td>갭→활성화</td><td>χ²=0.29 p=0.593</td><td>V=0.024</td><td><span class="pillx no">기각</span></td></tr>
+        <tr><td>D-5</td><td>1인당매출→희소성</td><td>Spearman 다중</td><td>+0.13, −0.83, −0.33</td><td><span class="pillx no">기각</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="foot">
+    <b>재현</b>: 06_hypothesis_tree_verification.ipynb(14/14) · 07_definition_audit.ipynb(정의 감사 17건) ·
+    08_verification_ml_and_visuals.ipynb(§1~3 D-1/스팟체크/β) · 목표 셀러 기준선 재계산 스크립트(§4) · 기준일 2018-08-31<br>
+    <b>다음</b>: 위 결론을 의사결정 형태로 정리한 것이 <a href="step6_conclusion.html">6단계 결론·액션 제안</a>이다.
+  </div>
+
+</div>
+</body>
+</html>

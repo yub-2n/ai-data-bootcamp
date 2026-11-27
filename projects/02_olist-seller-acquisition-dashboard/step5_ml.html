@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1300">
+<title>5단계 머신러닝 | Seller OS</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5F6F8;--card:#FFF;--border:#E6E2E2;--line:#C9C9D1;
+  --t1:#2B2B30;--t2:#4A4A52;--t3:#6A6A73;--t4:#8A8A94;
+  --c1:#7E2124;--c3:#C63B3F;
+  --navy:#31538F;--navy-l:#6E8CC4;--navy-xl:#A8BBDD;--purple:#6E47A8;
+  --green:#1B7F49;--amber:#8A6100;
+  --teal:#0d9488;--teal-bg:#f0fdfa;
+  --green-bg:#E8F5EE;--red-bg:#FBEAE8;--amber-bg:#F6F0E2;--navy-bg:#EDF1F8;--grey-bg:#EFEFF1;
+  --font:'Pretendard',-apple-system,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:15px;padding:24px 28px 46px}
+.wrap{max-width:1230px;margin:0 auto}
+
+.stagenav{display:flex;align-items:stretch;gap:0;margin-bottom:13px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.sn{flex:1;min-width:104px;padding:9px 11px;font-size:11px;color:var(--t4);text-decoration:none;
+  border-right:1px solid var(--border);line-height:1.4;transition:background .12s}
+.sn:last-child{border-right:none}
+.sn:hover{background:#FAFAFB}
+.sn .num{display:block;font-size:10px;font-weight:800;letter-spacing:.04em;margin-bottom:2px}
+.sn .nm{display:block;font-size:11.5px;font-weight:600;color:var(--t3)}
+.sn.done .num{color:var(--green)} .sn.done .nm{color:var(--t2)}
+.sn.cur{background:var(--green);border-right-color:var(--green)}
+.sn.cur .num{color:rgba(255,255,255,.7)} .sn.cur .nm{color:#fff;font-weight:800}
+
+.hd{background:var(--green);color:#fff;border-radius:12px;padding:17px 22px;margin-bottom:13px}
+.stagetag{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);
+  padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:800;letter-spacing:.03em;margin-bottom:7px}
+.hd h1{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.hd .sub{font-size:12.5px;color:rgba(255,255,255,.78);margin-top:6px;line-height:1.6}
+.hd .sub b{color:#fff}
+
+.lane{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px 20px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:14px}
+.lane-h{display:flex;align-items:baseline;gap:10px;margin-bottom:13px;flex-wrap:wrap}
+.lane-h .t{font-size:15.5px;font-weight:800;letter-spacing:-.2px}
+.lane-h .m{font-size:12px;color:var(--t3)}
+
+.termgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.term{border:1px solid var(--border);border-radius:9px;padding:10px 12px;background:#FCFCFD}
+.term .t{font-size:12.5px;font-weight:800;color:var(--green)}
+.term .d{font-size:10.5px;color:var(--t3);line-height:1.55;margin-top:4px}
+
+.plain{background:var(--teal-bg);border-left:4px solid var(--teal);border-radius:8px;
+  padding:10px 14px;margin:10px 0;font-size:12px;color:var(--t2);line-height:1.65}
+.plain .h{font-size:11px;font-weight:800;color:var(--teal);margin-bottom:4px;letter-spacing:.02em}
+
+.verdict{border-left:4px solid var(--teal);background:var(--teal-bg);border-radius:8px;
+  padding:11px 15px;margin-top:10px}
+.verdict .h{font-size:11px;font-weight:800;color:var(--teal);margin-bottom:5px;letter-spacing:.03em}
+.verdict .b{font-size:12.5px;color:var(--t1);line-height:1.65}
+.verdict .b b{color:var(--c1)}
+
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+.cmpcard{border:1px solid var(--border);border-radius:9px;padding:12px 14px}
+.cmpcard.old{background:#FBFAFA;border-color:#EADFDF}
+.cmpcard.new{background:var(--green-bg);border-color:rgba(27,127,73,.25)}
+.cmpcard .tag{font-size:10px;font-weight:800;letter-spacing:.05em;margin-bottom:6px}
+.cmpcard.old .tag{color:var(--t4)}
+.cmpcard.new .tag{color:var(--green)}
+.cmpcard .v{font-size:18px;font-weight:800;letter-spacing:-.3px}
+.cmpcard .s{font-size:11px;color:var(--t3);margin-top:4px;line-height:1.5}
+
+.tbl{width:100%;border-collapse:collapse;font-size:11.8px}
+.tbl th{text-align:left;font-size:10.8px;color:var(--t3);padding:7px 8px;font-weight:700;
+  border-bottom:1.5px solid var(--border);white-space:nowrap}
+.tbl th.r{text-align:right}
+.tbl td{padding:6.5px 8px;color:var(--t2);border-bottom:1px solid #F5F6F8;line-height:1.5}
+.tbl td.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl td:first-child{color:var(--t1);font-weight:700}
+.tbl tr.sec td{background:#FAFAFB;font-weight:800;color:var(--t1);font-size:11.3px}
+.tbl tr.hl td{background:var(--green-bg)}
+.wide{overflow-x:auto}
+.pillx{font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.pillx.ok{background:var(--green-bg);color:var(--green)}
+.pillx.no{background:var(--red-bg);color:var(--c3)}
+.pillx.hold{background:var(--amber-bg);color:var(--amber)}
+
+/* 오즈비 바 */
+.oddsbar-wrap{display:flex;flex-direction:column;gap:7px;margin:10px 0}
+.oddsrow{display:grid;grid-template-columns:150px 1fr 70px;align-items:center;gap:10px;font-size:12px}
+.oddsrow .lbl{color:var(--t2);font-weight:700}
+.oddstrack{position:relative;height:20px;background:#F1F1F3;border-radius:5px;overflow:hidden}
+.oddsfill{position:absolute;top:0;bottom:0;border-radius:5px}
+.oddsfill.up{background:var(--green);left:50%}
+.oddsfill.down{background:var(--c3);right:50%}
+.oddsmid{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--t4)}
+.oddsval{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+.oddsval.up{color:var(--green)}
+.oddsval.down{color:var(--c3)}
+
+.foot{font-size:11px;color:var(--t4);line-height:1.7;margin-top:16px;padding-top:13px;border-top:1px solid var(--border)}
+.foot b{color:var(--t3)}
+h3{font-size:14px;font-weight:800;margin:14px 0 6px;letter-spacing:-.2px;color:var(--t1)}
+h3:first-child{margin-top:0}
+p.lead{font-size:12.5px;color:var(--t2);line-height:1.7;margin-bottom:8px}
+@media (max-width:1050px){
+  .termgrid{grid-template-columns:1fr 1fr}
+  .cmp{grid-template-columns:1fr}
+  .oddsrow{grid-template-columns:110px 1fr 60px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="stagenav">
+  <a class="sn done" href="step0_eda.html"><span class="num">EDA</span><span class="nm">데이터 탐색</span></a>
+  <a class="sn done" href="step1_hypothesis_tree.html"><span class="num">1단계</span><span class="nm">가설 트리</span></a>
+  <a class="sn done" href="step2_metric_map.html"><span class="num">2단계</span><span class="nm">지표 지도 (AARRR)</span></a>
+  <a class="sn done" href="step3_logic_tree.html"><span class="num">3단계</span><span class="nm">원인 분해 (로직·이슈 트리)</span></a>
+  <a class="sn done" href="step4_statistical_verification.html"><span class="num">4단계</span><span class="nm">통계 검증</span></a>
+  <a class="sn cur" href="step5_ml.html"><span class="num">5단계</span><span class="nm">머신러닝</span></a>
+  <a class="sn done" href="step6_conclusion.html"><span class="num">6단계</span><span class="nm">결론 · 액션 제안</span></a>
+  <a class="sn done" href="step7_dashboard.html"><span class="num">7단계</span><span class="nm">대시보드</span></a>
+  </div>
+
+  <div class="hd">
+    <div class="stagetag">5단계 산출물 · 머신러닝 (7단계 중 5)</div>
+    <h1>머신러닝 — 통계 검정과 다른 방법으로 같은 결론에 도달하는가</h1>
+    <div class="sub">
+      개별 셀러의 성패를 맞히는 <b>점수 모델을 만드는 게 목적이 아니다</b> · 통계 검정으로 찾은 선별 레버가
+      <b>서로 다른 방법으로도 같은 답을 주는지</b> 세 번째 관점에서 확인하는 것이 목적이다
+    </div>
+  </div>
+
+  <!-- 용어 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">이 페이지를 읽기 전에 — 용어 5개</span>
+      <span class="m">머신러닝을 몰라도 읽을 수 있도록, 아래 다섯 단어의 뜻만 알고 가면 된다</span>
+    </div>
+    <div class="termgrid">
+      <div class="term"><div class="t">ROC-AUC</div><div class="d">"무작위로 성공/실패 한 쌍을 뽑았을 때, 모델이 성공 쪽에 더 높은 점수를 줄 확률." 0.5=동전 던지기, 1.0=완벽. 실무에서 쓸만하다고 보는 기준은 통상 0.7 이상.</div></div>
+      <div class="term"><div class="t">PR-AUC</div><div class="d">"양성(활성화)만 놓고 봤을 때 얼마나 잘 골라내는가." 클래스 비율이 한쪽으로 치우칠 때 ROC-AUC보다 더 정직한 지표.</div></div>
+      <div class="term"><div class="t">오즈비(odds ratio)</div><div class="d">"이 조건이면 활성화될 가능성이 몇 배가 되는가." 1보다 크면 활성화를 높이는 쪽, 1보다 작으면 낮추는 쪽. 로지스틱 회귀 계수를 지수변환한 값.</div></div>
+      <div class="term"><div class="t">교차검증(5-fold)</div><div class="d">데이터를 5등분해 4/5로 학습, 1/5로 평가하는 것을 5번 반복. 표본이 작을 때 "운 좋은 한 번의 결과"에 속지 않기 위한 방법.</div></div>
+      <div class="term"><div class="t">데이터 누수(leakage)</div><div class="d">예측하려는 결과(활성화 여부)가 나온 "이후"에 생기는 정보(첫 주문일, GMV, 리뷰)를 특징으로 잘못 넣는 것. 넣으면 점수는 좋아 보이지만 실제로는 쓸 수 없는 모델이 된다.</div></div>
+    </div>
+  </div>
+
+  <!-- §1 문제정의 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§1 · 무엇을, 어떤 정보로 예측했나</span>
+      <span class="m">1단계 가설트리의 "저장소에 ML 코드가 없다"는 자백(E-1)을 이 페이지에서 해소한다</span>
+    </div>
+    <p class="lead"><b>계약(딜) 시점에 이미 알 수 있는 정보만으로, 그 셀러가 90일 안에 첫 판매를 낼지</b>를 예측한다.
+      첫 주문일·매출·리뷰처럼 활성화 이후에나 생기는 정보는 일부러 뺐다 — 그런 정보를 넣으면 점수는 잘 나오지만
+      "계약 맺을지 말지 판단할 때"는 아직 존재하지 않는 정보라서 실제로 쓸 수 없기 때문이다.</p>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>설계 항목</th><th>선택</th><th>이유</th></tr></thead>
+      <tbody>
+        <tr><td>모집단</td><td>활성화 판정 코호트 667건</td><td>라벨(90일 내 활성화 여부)이 확정되는 유일한 집합</td></tr>
+        <tr><td>라벨</td><td>90일 내 첫 주문 = 1 (양성률 44.1%)</td><td>1단계·2단계와 동일한 팀 표준 활성화 정의</td></tr>
+        <tr><td>특징</td><td>계약 시점 확정 정보만 (사업 규모·형태·유입채널·품목·성향라벨·리드 소요일)</td><td>데이터 누수 방지</td></tr>
+        <tr><td>모델</td><td>로지스틱 회귀</td><td>표본 667건 · 범주형 위주 → 복잡한 모델은 과적합. 계수가 오즈비로 바로 해석됨</td></tr>
+        <tr><td>검증</td><td>계층 5-fold 교차검증</td><td>표본이 작아 한 번의 평가는 운에 좌우될 수 있음</td></tr>
+      </tbody>
+    </table></div>
+    <div class="plain"><div class="h">쉽게 말하면</div>
+      "이 사람이 계약하면 90일 안에 첫 판매를 할까?"를 <b>계약서에 쓰여 있는 정보만 보고</b> 맞혀보는 것이다.
+      "얼마나 잘 맞히는가"를 4단계로 늘려가며 봤는데, 정보를 아무리 추가해도 크게 나아지지 않았다 — 그 자체가 이 프로젝트의 발견이다(§4 참고).</div>
+  </div>
+
+  <!-- §2 모델비교 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§2 · 정보를 하나씩 늘려가며 4개 모델을 비교</span>
+      <span class="m">특징을 추가할수록 정말 더 잘 맞히는지 확인 — 그렇지 않다면 그것도 결론이다</span>
+    </div>
+    <div class="wide"><table class="tbl">
+      <thead><tr><th>모델</th><th>추가된 정보</th><th class="r">ROC-AUC</th><th class="r">PR-AUC</th><th>해석</th></tr></thead>
+      <tbody>
+        <tr><td>기준선</td><td>정보 없음 (사전확률만)</td><td class="r">0.500</td><td class="r">0.441</td><td>비교 기준점</td></tr>
+        <tr class="hl"><td>모델1</td><td>사업 규모 + 형태</td><td class="r">0.619 ± 0.049</td><td class="r">0.540</td><td>특징 2개로 기준선을 확실히 넘음</td></tr>
+        <tr><td>모델2</td><td>+ 유입 채널 + 품목 세그먼트</td><td class="r">0.617 ± 0.034</td><td class="r">0.543</td><td>특징을 11→40개로 늘려도 개선 없음</td></tr>
+        <tr><td>모델3</td><td>+ 성향 라벨</td><td class="r">0.609 ± 0.038</td><td class="r">0.536</td><td>오히려 하락 — 통계 검정의 기각과 일치</td></tr>
+        <tr><td>모델4</td><td>+ 리드 소요일</td><td class="r">0.621 ± 0.030</td><td class="r">0.551</td><td>미미한 개선 (전체 중 최고)</td></tr>
+      </tbody>
+    </table></div>
+    <div class="verdict">
+      <div class="h">그래서 뭐 — 개별 예측 모델로는 못 쓴다, 그리고 그게 정상이다</div>
+      <div class="b">실무에서 스코어링 모델로 쓰려면 통상 <b>AUC 0.7 이상</b>을 기대하는데, 4개 모델 모두 0.61~0.62에 머문다.
+        정보를 40개 특징까지 늘려도 거의 그대로라는 것은 <b>"계약 시점 정보만으로는 개별 셀러의 성패를 가늠할 수 없다"</b>는 뜻이다 —
+        온보딩 이후 단계의 요인이 더 클 가능성이 높지만, 그 데이터는 현재 갖고 있지 않다.
+        그래서 이 프로젝트는 <b>"활성화 확률 예측 모델"을 산출물로 내지 않는다</b>. ML의 역할은 아래 §3처럼 <b>선별 규칙의 근거를 세 번째 방법으로 검증</b>하는 데 있다.</div>
+    </div>
+  </div>
+
+  <!-- §3 오즈비 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§3 · 모델1 오즈비 — 통계 검정과 같은 순서로 나오는가</span>
+      <span class="m">카이제곱 검정(B-1·B-2)에서 찾은 선별 레버를 ML이 같은 방향으로 재확인한다</span>
+    </div>
+    <p class="lead">모델1(사업 규모+형태)의 계수를 오즈비로 바꾸면 "이 조건일 때 활성화 확률이 몇 배가 되는가"로 바로 읽을 수 있다.
+      기준(1.0, 회색 선)보다 오른쪽(초록)이면 활성화를 높이는 조건, 왼쪽(빨강)이면 낮추는 조건이다.</p>
+    <div class="oddsbar-wrap">
+      <div class="oddsrow">
+        <div class="lbl">online_big (중대형 온라인)</div>
+        <div class="oddstrack"><div class="oddsmid"></div><div class="oddsfill up" style="width:26%"></div></div>
+        <div class="oddsval up">2.06배</div>
+      </div>
+      <div class="oddsrow">
+        <div class="lbl">reseller (유통/리셀러)</div>
+        <div class="oddstrack"><div class="oddsmid"></div><div class="oddsfill up" style="width:14%"></div></div>
+        <div class="oddsval up">1.53배</div>
+      </div>
+      <div class="oddsrow">
+        <div class="lbl">offline (오프라인)</div>
+        <div class="oddstrack"><div class="oddsmid"></div><div class="oddsfill down" style="width:22%"></div></div>
+        <div class="oddsval down">0.46배</div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div class="h">그래서 뭐 — 세 가지 방법이 같은 답을 준다, 그러니 신뢰할 수 있다</div>
+      <div class="b">통계 검정(카이제곱 V=0.222/0.145)과 ML 오즈비가 <b>완전히 같은 순서</b>를 보인다:
+        <b>유통 × 중대형 온라인</b>을 먼저 상담하면 활성화 확률이 높고, <b>오프라인 단독</b>은 낮다.
+        서로 다른 방법(통계 검정 vs 회귀 모델)이 같은 결론에 도달했다는 것이, 이 선별 레버를 실행 규칙으로 채택해도 되는 근거다.
+        실행 함의: 활성화 확률을 점수로 매겨 리드를 정렬하는 것이 아니라 <b>"유통 × 중대형 온라인을 먼저 상담한다"는 단순 규칙</b>을 쓰는 편이
+        지금 데이터가 뒷받침하는 수준에 맞다.</div>
+    </div>
+  </div>
+
+  <!-- §4 성향라벨 E-1/B-3 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">§4 · 성향 라벨(B-3) — 세 가지 방법 모두에서 "쓸모없다"로 일치</span>
+      <span class="m">1단계 B-3, 4단계 §5에 이어 ML이 세 번째 독립적 증거를 더한다</span>
+    </div>
+    <div class="cmp">
+      <div class="cmpcard old">
+        <div class="tag">방법 1 · 카이제곱 검정</div>
+        <div class="v">p = 0.605</div>
+        <div class="s">성향 라벨과 활성화 여부 사이에 유의한 관계 없음 (V=0.061)</div>
+      </div>
+      <div class="cmpcard old">
+        <div class="tag">방법 2 · log-rank 검정</div>
+        <div class="v">p = 0.628</div>
+        <div class="s">활성화까지 걸리는 시간의 분포도 라벨별로 다르지 않음</div>
+      </div>
+    </div>
+    <div class="cmp">
+      <div class="cmpcard new" style="grid-column:1/-1">
+        <div class="tag">방법 3 · ML (모델2 → 모델3)</div>
+        <div class="v">AUC −0.008 (추가 시 오히려 하락)</div>
+        <div class="s">예측에 도움이 되기는커녕 성능을 깎는다 — 정보로서 가치가 없다는 뜻</div>
+      </div>
+    </div>
+    <div class="verdict">
+      <div class="h">그래서 뭐 — B-3 기각을 최종 확정, E-1 해소</div>
+      <div class="b">통계적으로 유의하지 않고(방법 1·2), 예측에도 도움이 안 되는(방법 3) 정보를
+        선별 기준으로 쓸 이유가 없다. <b>성향 라벨은 채택하지 않는다</b> — 세 가지 서로 다른 방법이 모두 같은 결론에 도달했기 때문에
+        "데이터가 부족해서 안 나온 결과"가 아니라 "정말로 관계가 없다"고 볼 수 있다.
+        아울러 1단계 가설트리에 남아있던 <b>"ML 근거 없음(E-1)"이라는 항목도 이 페이지로 해소</b>됐다.</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>재현</b>: 08_verification_ml_and_visuals.ipynb §4(모델 학습·평가), §7(6단계 목표 재계산) · 계층 5-fold 교차검증, random_state=42 ·
+    모집단: 활성화 판정 코호트 n=667 · 기준일 2018-08-31<br>
+    <b>다음</b>: 통계 검정(4단계)과 ML(5단계)이 함께 지지하는 선별 레버를, <a href="step6_conclusion.html">6단계</a>에서
+    회사 관점의 실행 제안으로 정리한다.
+  </div>
+
+</div>
+</body>
+</html>
