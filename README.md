@@ -67,7 +67,7 @@ ai-data-bootcamp/
 | D014 | [D014](D014/) | 가설검정 (SciPy, statsmodels) |
 | D015 | [D015](D015/) | 상관과 회귀 (SciPy, statsmodels) |
 | D016 | [D016](D016/) | 가설검정의 주의점, 인과와 상관 (statsmodels, scikit-learn) |
-| D017 | [D017_ABtest](D017_ABtest/) | A/B 테스트 종합 과제 (SciPy, statsmodels) |
+| D017 | [D017_ABtest](D017_ABtest/) | A/B 테스트 종합 과제: 새 랜딩 페이지 출시 판단 (SciPy, statsmodels) |
 | D018 | [D018](D018/) | 선형·로지스틱 회귀 (scikit-learn) |
 | D019 | [D019](D019/) | 의사결정나무와 앙상블 (scikit-learn, XGBoost) |
 | D020 | [D020](D020/) | 과적합과 교차검증 (scikit-learn, XGBoost) |
