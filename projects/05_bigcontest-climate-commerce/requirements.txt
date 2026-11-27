@@ -1,0 +1,11 @@
+# AOA 빅콘테스트 2026 — 최종 실행 환경 (유빈 Mac, Python 3.9.13)
+# 설치: python3 -m pip install -r requirements.txt
+# Python 3.10 이상에서는 아래 고정 버전이 설치되지 않습니다 → README_실행가이드.md 2-2 "방법 B"(버전 고정 없이 설치)를 쓰세요.
+# 다른 버전에서도 가운데 값은 같고, 90% 구간 끝값만 0.5%p 안에서 다를 수 있습니다.
+pandas==1.4.4
+numpy==1.21.5
+statsmodels==0.13.2
+scikit-learn==1.6.1
+matplotlib==3.5.2
+openpyxl          # asos_rain_summary.xlsx 열 때만
+jupyter           # 노트북 04~06 실행용 (nbconvert 포함)
