@@ -56,7 +56,7 @@
 | 파일 | 설명 |
 |---|---|
 | `olist_delivery_review_analysis_final.ipynb` | 최종 분석 노트북 (전처리 → 검정 → 회귀 → 보조 질문 → 외부 데이터 보강 → 요약·한계) |
-| `olist_delivery_review_presentation_가독성개선.pdf` | 최종 발표 자료 |
+| `olist_delivery_review_presentation.pdf` | 최종 발표 자료 |
 | `실행가이드.md` | 팀 제출용 README 원본: 실행 환경(패키지 버전), 데이터 폴더 구조, 노트북 실행 순서. 안의 노트북 이름 `olist_delivery_review_analysis.ipynb`는 이 폴더의 `..._final.ipynb`를 가리킵니다 |
 
 ## 사용 기술
