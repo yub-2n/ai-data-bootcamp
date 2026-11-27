@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2단계 지표 지도 (AARRR) | Seller OS</title>
+<!-- 웹폰트는 렌더를 막지 않게 비동기로 — CDN이 막혀도 시스템 한글 폰트로 즉시 그려진다 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      media="print" onload="this.media='all'">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5F6F8;--card:#FFF;--border:#E6E2E2;--line:#C9C9D1;
+  --t1:#2B2B30;--t2:#4A4A52;--t3:#6A6A73;--t4:#8A8A94;
+  --c1:#7E2124;--c3:#C63B3F;
+  --navy:#31538F;--navy-l:#6E8CC4;--navy-xl:#A8BBDD;--purple:#6E47A8;
+  --green:#1B7F49;--amber:#8A6100;
+  --green-bg:#E8F5EE;--red-bg:#FBEAE8;--amber-bg:#F6F0E2;--navy-bg:#EDF1F8;--grey-bg:#EFEFF1;
+  --font:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',system-ui,-apple-system,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:15px;padding:24px 28px 46px}
+.wrap{max-width:1230px;margin:0 auto}
+
+/* 단계 네비 */
+.stagenav{display:flex;align-items:stretch;gap:0;margin-bottom:13px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.sn{flex:1;min-width:104px;padding:9px 11px;font-size:11px;color:var(--t4);text-decoration:none;
+  border-right:1px solid var(--border);line-height:1.4}
+.sn:last-child{border-right:none}
+.sn:hover{background:#FAFAFB}
+.sn .num{display:block;font-size:10px;font-weight:800;letter-spacing:.04em;margin-bottom:2px}
+.sn .nm{display:block;font-size:11.5px;font-weight:600;color:var(--t3)}
+.sn.done .num{color:var(--green)} .sn.done .nm{color:var(--t2)}
+.sn.cur{background:var(--purple);border-right-color:var(--purple)}
+.sn.cur .num{color:rgba(255,255,255,.7)} .sn.cur .nm{color:#fff;font-weight:800}
+
+.hd{background:var(--purple);color:#fff;border-radius:12px;padding:17px 22px;margin-bottom:13px}
+.stagetag{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);
+  padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:800;letter-spacing:.03em;margin-bottom:7px}
+.hd h1{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.hd .sub{font-size:12.5px;color:rgba(255,255,255,.78);margin-top:6px;line-height:1.6}
+.hd .sub b{color:#fff}
+
+/* 분모 경고 */
+.warnbar{background:var(--amber-bg);border:1px solid rgba(138,97,0,.22);border-radius:10px;
+  padding:12px 16px;margin-bottom:14px}
+.warnbar .h{font-size:12px;font-weight:800;color:var(--amber);margin-bottom:7px}
+.chain{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.ch{background:#fff;border:1px solid var(--border);border-radius:7px;padding:6px 11px;text-align:center}
+.ch .n{font-size:15px;font-weight:800;letter-spacing:-.3px}
+.ch .l{font-size:10px;color:var(--t3);margin-top:1px}
+.arw{color:var(--t4);font-weight:800}
+.warnbar .t{font-size:11.5px;color:var(--t2);line-height:1.6}
+.warnbar .t b{color:var(--c1)}
+
+/* AARRR 레인 */
+.lane{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px 20px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:14px}
+.lane-h{display:flex;align-items:baseline;gap:10px;margin-bottom:13px;flex-wrap:wrap}
+.lane-h .t{font-size:15.5px;font-weight:800;letter-spacing:-.2px}
+.lane-h .m{font-size:12px;color:var(--t3)}
+.flow{display:flex;gap:0;align-items:stretch}
+.stage{flex:1;min-width:0;position:relative;padding-right:18px}
+.stage:last-child{padding-right:0}
+.stage:after{content:'';position:absolute;right:6px;top:34px;width:0;height:0;
+  border-left:7px solid var(--line);border-top:6px solid transparent;border-bottom:6px solid transparent}
+.stage:last-child:after{display:none}
+.sbox{border:1px solid var(--border);border-radius:9px;overflow:hidden;height:100%;display:flex;flex-direction:column}
+.sbox .top{padding:8px 11px;border-bottom:1px solid var(--border)}
+.sbox .letter{font-size:10px;font-weight:800;letter-spacing:.07em;color:#fff;opacity:.85}
+.sbox .name{font-size:13.5px;font-weight:800;color:#fff;margin-top:1px;letter-spacing:-.2px}
+.sbox.acq .top{background:var(--navy-l)} .sbox.act .top{background:var(--navy)}
+.sbox.ret .top{background:#4A7C59} .sbox.rev .top{background:var(--c1)} .sbox.ref .top{background:var(--t4)}
+.sbox .body{padding:10px 11px;flex:1;display:flex;flex-direction:column;gap:8px}
+.kv{font-size:11px;color:var(--t3);line-height:1.45}
+.kv .big{display:block;font-size:19px;font-weight:800;color:var(--t1);letter-spacing:-.4px}
+.kv .den{display:inline-block;background:var(--grey-bg);border-radius:4px;padding:1px 6px;
+  font-size:10px;font-weight:700;color:var(--t2);margin-top:3px}
+.mrow{font-size:10.5px;color:var(--t3);line-height:1.5;padding-top:7px;border-top:1px dashed var(--border)}
+.mrow b{color:var(--t2)}
+.stat{font-size:10px;font-weight:800;padding:2px 6px;border-radius:20px;display:inline-block;margin-top:5px}
+.stat.ok{background:var(--green-bg);color:var(--green)}
+.stat.part{background:var(--amber-bg);color:var(--amber)}
+.stat.no{background:var(--grey-bg);color:var(--t4)}
+.hyp{font-size:10px;color:var(--purple);font-weight:700;margin-top:4px}
+
+/* 제약 레인 */
+.lane.constraint{border-left:4px solid var(--green)}
+.cons{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.cbox{border:1px solid var(--border);border-radius:9px;padding:10px 12px;background:#FCFCFD}
+.cbox .t{font-size:12.5px;font-weight:800;line-height:1.3}
+.cbox .v{font-size:17px;font-weight:800;margin:4px 0 2px;letter-spacing:-.3px}
+.cbox .d{font-size:10.5px;color:var(--t3);line-height:1.5}
+
+/* 지표 사전 */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;font-size:11px;color:var(--t3);padding:7px 8px;font-weight:700;
+  border-bottom:1.5px solid var(--border);white-space:nowrap}
+.tbl th.r{text-align:right}
+.tbl td{padding:7px 8px;color:var(--t2);border-bottom:1px solid #F5F6F8;line-height:1.5}
+.tbl td.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl td:first-child{color:var(--t1);font-weight:700}
+.tbl tr.sec td{background:#FAFAFB;font-weight:800;color:var(--t1);font-size:11.5px}
+.pillx{font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.pillx.ok{background:var(--green-bg);color:var(--green)}
+.pillx.part{background:var(--amber-bg);color:var(--amber)}
+.pillx.no{background:var(--grey-bg);color:var(--t4)}
+
+.foot{font-size:11px;color:var(--t4);line-height:1.7;margin-top:16px;padding-top:13px;border-top:1px solid var(--border)}
+.foot b{color:var(--t3)}
+@media (max-width:1050px){
+  .flow{flex-direction:column;gap:10px}
+  .stage{padding-right:0}
+  .stage:after{display:none}
+  .cons{grid-template-columns:1fr 1fr}
+}
+
+/* 좁은 화면에서 가로로 밀리지 않게 */
+*,*:before,*:after{min-width:0}
+.wide,.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:720px){body{padding:14px 12px 32px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="stagenav">
+    <a class="sn done" href="step0_eda.html"><span class="num">EDA</span><span class="nm">데이터 탐색</span></a>
+    <a class="sn done" href="step1_hypothesis_tree.html"><span class="num">1단계</span><span class="nm">가설 트리</span></a>
+    <a class="sn cur" href="step2_metric_map.html"><span class="num">2단계</span><span class="nm">지표 지도 (AARRR)</span></a>
+    <a class="sn done" href="step3_logic_tree.html"><span class="num">3단계</span><span class="nm">원인 분해 (로직·이슈 트리)</span></a>
+    <a class="sn done" href="step4_statistical_verification.html"><span class="num">4·5단계</span><span class="nm">통계 검증 · 머신러닝</span></a>
+    <a class="sn done" href="step6_conclusion.html"><span class="num">6단계</span><span class="nm">결론 · 액션 제안</span></a>
+    <a class="sn done" href="step7_dashboard.html"><span class="num">7단계</span><span class="nm">대시보드</span></a>
+  </div>
+
+  <div class="hd">
+    <div class="stagetag">2단계 산출물 · 지표 지도 (7단계 중 2)</div>
+    <h1>셀러측 AARRR 지표 지도 — 각 단계를 무엇으로, 어떤 분모로 측정하는가</h1>
+    <div class="sub">
+      구매자가 아니라 <b>셀러를 사용자로 보는</b> AARRR이다 · 단계마다 <b>분모(모집단)가 달라지는 것</b>이 이 지도의 핵심 ·
+      각 지표에는 <b>측정 가능 여부</b>와 <b>연결된 가설(1단계)</b>을 붙였다
+    </div>
+  </div>
+
+  <!-- 분모 경고 -->
+  <div class="warnbar">
+    <div class="h">지도를 읽는 첫 번째 규칙 — 단계마다 분모가 바뀐다</div>
+    <div class="chain">
+      <div class="ch"><div class="n">8,000</div><div class="l">마케팅 리드 (P1)</div></div>
+      <span class="arw">→</span>
+      <div class="ch"><div class="n">842</div><div class="l">계약 성사 (P2)</div></div>
+      <span class="arw">→</span>
+      <div class="ch"><div class="n">667</div><div class="l">관측 90일 확보 (P3)</div></div>
+      <span class="arw">→</span>
+      <div class="ch"><div class="n">294</div><div class="l">90일 내 첫 판매</div></div>
+      <span class="arw">→</span>
+      <div class="ch"><div class="n">380</div><div class="l">첫 판매 셀러 전체 (P4)</div></div>
+    </div>
+    <div class="t">
+      842 = 667(판정 가능) + 125(관측 90일 미확보) + 50(계약일이 기준일 이후)이다.
+      <b>계약률(분모=리드 8,000)과 활성화율(분모=코호트 667)을 곱하지 않는다</b> — 곱하면 종단 성과가
+      1.0~1.36배 과대추정된다. 종단 전환율은 분모를 리드로 고정해 <b>직접</b> 계산한다(organic 3.70% vs paid 5.11% = 1.38배).
+    </div>
+  </div>
+
+  <!-- AARRR 레인 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">셀러 여정 5단계</span>
+      <span class="m">성공 기준은 계약이 아니라 <b>90일 내 첫 판매</b> — 계약을 성과로 세면 계약만 하고 팔지 않은 셀러가 성공으로 집계된다</span>
+    </div>
+    <div class="flow">
+
+      <div class="stage">
+        <div class="sbox acq">
+          <div class="top"><div class="letter">ACQUISITION</div><div class="name">유입 · 계약 확보</div></div>
+          <div class="body">
+            <div class="kv">리드 → 계약률<span class="big">10.53%</span>
+              <span class="den">분모 = 리드 8,000</span></div>
+            <div class="mrow">리드→계약 소요 <b>중앙 14일 · p90 162일</b><br>
+              마지막 리드 이후 168일까지 관측되어 <b>우측 절단 없음</b> → 이 비율은 하한이 아니다</div>
+            <div class="mrow">채널이 이 단계를 가른다<br>
+              <b>V=0.133, p=3.0e-25</b> · 상위 paid_search 12.3% · organic 11.8% · direct 11.2%</div>
+            <span class="stat ok">측정 가능</span>
+            <div class="hyp">연결 가설 · C-1 채택 / C-4 주의(unknown 편향)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sbox act">
+          <div class="top"><div class="letter">ACTIVATION</div><div class="name">활성화 · 첫 판매</div></div>
+          <div class="body">
+            <div class="kv">90일 내 첫 판매<span class="big">44.08%</span>
+              <span class="den">분모 = 코호트 667</span></div>
+            <div class="mrow">활성화 소요 <b>중앙 44일 · p75 72일 · 최소 3일</b><br>
+              즉시판매 0건 → <b>90일 창의 근거</b>이며 그 이전 판정은 무의미</div>
+            <div class="mrow"><b>레버는 선별이다</b> — 사업 규모 V=0.222(online_big 64.0% ↔ offline 26.5%) ·
+              사업 형태 V=0.145(유통 49.2% vs 제조 33.2%)<br>
+              채널은 이 단계를 가르지 않는다(p=0.069 / log-rank 0.111)</div>
+            <span class="stat ok">측정 가능</span>
+            <div class="hyp">연결 가설 · B-1·B-2 채택 / B-3·B-4 기각·불가 / C-2 기각 / D-1 채택</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sbox ret">
+          <div class="top"><div class="letter">RETENTION</div><div class="name">지속 · 판매 유지</div></div>
+          <div class="body">
+            <div class="kv">첫 주문 후 3개월 유지<span class="big">54.6%</span>
+              <span class="den">분모 = 관측 확보 활성 셀러 194</span></div>
+            <div class="mrow">1개월 <b>63.4%</b>(n=287) → 2개월 <b>59.8%</b>(n=259) → 3개월 <b>54.6%</b>(n=194)<br>
+              6개월 26.7%는 <b>n=30으로 인용 금지</b>(관측 절단)</div>
+            <div class="mrow">초기 배송 품질이 지속성과 연결 — 첫 30일 정시율 ↔ 활동 지속일
+              <b>ρ=+0.169</b>(p=2.4e-6, n=772) · 단 거래량과는 무관(ρ=+0.026)</div>
+            <span class="stat part">측정 가능 (3개월까지)</span>
+            <div class="hyp">연결 가설 · A-5 부분채택 · <b>범위 밖(②)</b></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sbox rev">
+          <div class="top"><div class="letter">REVENUE</div><div class="name">매출 · 거래액</div></div>
+          <div class="body">
+            <div class="kv">셀러 탄력성 β<span class="big">0.93</span>
+              <span class="den">품목-월 패널 737</span></div>
+            <div class="mrow">셀러 수와 거래액이 <b>대략 1:1로 함께 움직인다</b><br>
+              95% CI [0.677, 1.184] (품목 클러스터 SE) · 명세에 따라 0.76~1.28 · <b>β=0 기각(t=7.2)</b> = 희석 없음</div>
+            <div class="mrow">셀러당 GMV 중앙값(2018 상반기) housewares <b>365</b> · pet_shop <b>424</b><br>
+              <b>회사 매출로 환산 불가</b> — 수수료율(take rate) 데이터 없음. GMV는 거래액이지 매출이 아니다</div>
+            <span class="stat part">거래액까지만</span>
+            <div class="hyp">연결 가설 · D-5 기각(1인당 매출은 희소성 지표 아님) · E-4 측정불가</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="sbox ref">
+          <div class="top"><div class="letter">REFERRAL</div><div class="name">추천</div></div>
+          <div class="body">
+            <div class="kv">referral 채널 계약률<span class="big">8.45%</span>
+              <span class="den">분모 = referral 리드 284</span></div>
+            <div class="mrow">채널로서는 측정된다 — 계약 24건 · 코호트 18건 중 활성화 <b>8건(44.4%)</b>으로
+              전체 평균과 유사</div>
+            <div class="mrow"><b>추천자–피추천자 연결은 불가</b> — 누가 누구를 데려왔는지 기록이 없어
+              바이럴 계수(K-factor)는 계산할 수 없다</div>
+            <span class="stat part">부분 측정</span>
+            <div class="hyp">연결 가설 · (초기 문서에서 '측정 불가'로 잘못 적었던 항목을 정정)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 제약 레인 -->
+  <div class="lane constraint">
+    <div class="lane-h">
+      <span class="t">구매자측 제약 축 — 셀러 지표의 상한을 정한다</span>
+      <span class="m">셀러를 데려와도 <b>배송이 무너지면 평점이 떨어져 그 품목의 수요 자체가 준다</b> ·
+        이 데이터셋에서 가장 강한 관계이며 1단계 트리의 A 가지에 해당</span>
+    </div>
+    <div class="cons">
+      <div class="cbox">
+        <div class="t">정시 도착 → 평점</div>
+        <div class="v">1.58점 격차</div>
+        <div class="d">정시 4.328(35,288건) vs 지연 2.752(3,336건)<br>
+          Mann-Whitney <b>p&lt;1e-300</b> · 효과크기 r=0.51<br><b>A-1 채택</b></div>
+      </div>
+      <div class="cbox">
+        <div class="t">품목별 평점 차이</div>
+        <div class="v">p=7.9e-43</div>
+        <div class="d">Kruskal-Wallis H=299.6 (k=38)<br>
+          품목 선정의 품질 필터(G2) 근거<br><b>A-2 채택</b></div>
+      </div>
+      <div class="cbox">
+        <div class="t">배송 소요일 → 평점</div>
+        <div class="v">ρ = −0.227</div>
+        <div class="d">주문 단위 (카테고리 단위 −0.674)<br>
+          단, 카테고리 평균끼리는 정시율↔평점 비유의(집계 수준 주의)<br><b>A-3 채택 · A-6 주의</b></div>
+      </div>
+      <div class="cbox">
+        <div class="t">동일 주 배송 여부</div>
+        <div class="v">0.19점 차이</div>
+        <div class="d">housewares 동일 주 5.98일/4.296 vs 타주 12.08일/4.106<br>
+          유치 <b>지역</b>을 지정하는 근거<br><b>A-4 채택</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 지표 사전 -->
+  <div class="lane">
+    <div class="lane-h">
+      <span class="t">지표 사전 — 정의 · 분모 · 현재값 · 측정 상태</span>
+      <span class="m">이 표에 없는 정의는 어느 문서에서도 쓰지 않는다 · 값이 다르면 이 표가 기준</span>
+    </div>
+    <div class="wide"><table class="tbl">
+      <thead><tr>
+        <th>지표</th><th>정의</th><th>분모 (모집단)</th><th class="r">현재값</th><th>측정</th><th>연결 가설</th>
+      </tr></thead>
+      <tbody>
+        <tr class="sec"><td colspan="6">Acquisition — 유입 · 계약</td></tr>
+        <tr><td>계약률</td><td>계약 성사 수 ÷ 리드 수</td><td>P1 리드 8,000</td><td class="r">10.53%</td>
+          <td><span class="pillx ok">가능</span></td><td>C-1</td></tr>
+        <tr><td>채널별 계약률</td><td>채널 내 계약 수 ÷ 채널 리드 수</td><td>P1 채널별</td><td class="r">3.0~16.3%</td>
+          <td><span class="pillx ok">가능</span></td><td>C-1 · C-4</td></tr>
+        <tr><td>리드→계약 소요일</td><td>계약일 − 리드 접촉일</td><td>P2 계약 842</td><td class="r">중앙 14일</td>
+          <td><span class="pillx ok">가능</span></td><td>—</td></tr>
+        <tr><td>종단 전환율</td><td>90일 활성화 셀러 수 ÷ <b>리드 수</b></td><td>P1 리드</td><td class="r">organic 3.70% / paid 5.11%</td>
+          <td><span class="pillx part">상대 비교만</span></td><td>C-1·C-2 (곱셈 금지)</td></tr>
+
+        <tr class="sec"><td colspan="6">Activation — 활성화 (성공 기준)</td></tr>
+        <tr><td><b>활성화율</b></td><td>90일 내 첫 주문 셀러 수 ÷ 관측 90일 확보 계약 수</td><td><b>P3 코호트 667</b></td>
+          <td class="r"><b>44.08%</b></td><td><span class="pillx ok">가능</span></td><td>B·C·D 전체</td></tr>
+        <tr><td>활성화 소요일</td><td>첫 주문일 − 계약일</td><td>P4 활성 380</td><td class="r">중앙 44일 · p75 72일</td>
+          <td><span class="pillx ok">가능</span></td><td>E-1</td></tr>
+        <tr><td>유형별 활성화율</td><td>사업 규모·형태별 활성화율</td><td>P3 (유형 15건 이상)</td><td class="r">26.5% ~ 64.0%</td>
+          <td><span class="pillx ok">가능</span></td><td>B-1 · B-2</td></tr>
+        <tr><td>세그먼트별 활성화 속도</td><td>Kaplan-Meier 곡선 · 다군 log-rank (소표본 병합 표준)</td><td>절단 포함 788</td>
+          <td class="r">χ²=25.8(13) p=0.0181</td><td><span class="pillx ok">가능</span></td><td>D-1</td></tr>
+        <tr><td>활성화 예측 확률</td><td>계약 시점 정보로 학습한 분류 모델</td><td>P3 코호트 667</td>
+          <td class="r">ROC-AUC 0.62</td><td><span class="pillx part">예측력 부족</span></td><td>5단계 ML</td></tr>
+
+        <tr class="sec"><td colspan="6">Retention — 지속 (범위 밖 · 크기만 측정)</td></tr>
+        <tr><td>M+1 / M+3 판매 유지율</td><td>첫 주문 후 N개월째 판매한 셀러 비율</td><td>관측 확보 활성 셀러</td>
+          <td class="r">63.4% / 54.6%</td><td><span class="pillx ok">가능</span></td><td>범위 밖 ②</td></tr>
+        <tr><td>M+6 유지율</td><td>동일</td><td>n=30</td><td class="r">26.7%</td>
+          <td><span class="pillx no">인용 금지</span></td><td>관측 절단</td></tr>
+        <tr><td>초기 품질 → 지속성</td><td>첫 30일 정시율 ↔ 활동 지속일 상관</td><td>셀러 772</td>
+          <td class="r">ρ=+0.169</td><td><span class="pillx part">효과 작음</span></td><td>A-5</td></tr>
+
+        <tr class="sec"><td colspan="6">Revenue — 거래액</td></tr>
+        <tr><td>셀러당 GMV</td><td>셀러별 GMV의 <b>중앙값</b> (평균 금지 — 파워로 분포)</td><td>P5 품목 40개</td>
+          <td class="r">품목별 298~2,616</td><td><span class="pillx ok">가능</span></td><td>D-5</td></tr>
+        <tr><td><b>셀러 탄력성 β</b></td><td>Δlog(GMV) = β·Δlog(셀러) · 품목·월 고정효과</td><td>품목-월 패널 737</td>
+          <td class="r"><b>0.93</b> [0.68, 1.18]</td><td><span class="pillx ok">가능</span></td><td>프로젝트 전제</td></tr>
+        <tr><td>증분 GMV 추정</td><td>최근 6개월 GMV × 수요-공급 갭</td><td>P5 품목</td>
+          <td class="r">housewares R$91.8K</td><td><span class="pillx part">거친 근사</span></td><td>D-3 규모 판단</td></tr>
+        <tr><td>회사 매출 / 유치 ROI</td><td>GMV × 수수료율 − 유치 비용</td><td>—</td><td class="r">—</td>
+          <td><span class="pillx no">불가</span></td><td>E-4</td></tr>
+
+        <tr class="sec"><td colspan="6">Referral — 추천</td></tr>
+        <tr><td>referral 채널 성과</td><td>origin='referral' 리드의 계약률·활성화율</td><td>리드 284 / 코호트 18</td>
+          <td class="r">8.45% / 44.4%</td><td><span class="pillx ok">가능</span></td><td>—</td></tr>
+        <tr><td>바이럴 계수 (K-factor)</td><td>셀러 1명이 데려온 신규 셀러 수</td><td>—</td><td class="r">—</td>
+          <td><span class="pillx no">불가</span></td><td>추천 관계 데이터 없음</td></tr>
+
+        <tr class="sec"><td colspan="6">Constraint — 구매자측 품질 (셀러 지표의 상한)</td></tr>
+        <tr><td>평점</td><td>주문별 최신 리뷰 점수의 평균 (<b>주문 단위 중복 제거 필수</b>)</td><td>P6 주문 38,624</td>
+          <td class="r">정시 4.33 / 지연 2.75</td><td><span class="pillx ok">가능</span></td><td>A-1 · A-2</td></tr>
+        <tr><td>정시율</td><td>실제 도착일 ≤ 예상 도착일 비율 (주문 단위)</td><td>P6 주문</td><td class="r">품목별 85~97%</td>
+          <td><span class="pillx ok">가능</span></td><td>A-1 · G2 필터</td></tr>
+        <tr><td>배송 소요일</td><td>도착일 − 주문일의 중앙값</td><td>P6 주문</td><td class="r">동일 주 5.98일 / 타주 12.08일</td>
+          <td><span class="pillx ok">가능</span></td><td>A-3 · A-4</td></tr>
+        <tr><td>온보딩 개입 효과</td><td>교육·상품등록 지원 유무별 활성화 차이</td><td>—</td><td class="r">—</td>
+          <td><span class="pillx no">불가</span></td><td>E-3 (개입 로그 없음)</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="foot">
+    <b>이 지도를 쓰는 규칙 3가지</b><br>
+    ① 단계 간 비율을 <b>곱하지 않는다</b> — 분모가 8,000 → 842 → 667 → 380으로 바뀐다.<br>
+    ② 활성화율은 <b>하나의 정의(90일 윈도우, 코호트 667)</b>만 쓴다. 정의를 바꾸면 32.3~51.9%까지 움직이므로 다른 값은 민감도 표에만 등장한다.<br>
+    ③ Retention 6개월·개별 예측 확률·ROI는 <b>인용하지 않는다</b> — 표본 또는 데이터가 없다.<br><br>
+    <b>적용 범위</b>: 이 지도는 <b>마케팅 퍼널을 통해 들어온 셀러</b>를 대상으로 한다.
+    퍼널 출신은 전체 판매 셀러 3,095명 중 380명(12.3%)이며, 나머지 87.7%의 유입 경로는 데이터에 없다.<br>
+    <b>재현</b>: `06~08_*.ipynb` · 기준일 2018-08-31 · 활성화 = 계약 후 90일 내 첫 주문
+  </div>
+
+</div>
+</body>
+</html>

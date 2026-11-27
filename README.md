@@ -17,8 +17,9 @@
 ```
 ai-data-bootcamp/
 ├── D001 ~ D021/     주차별 과제 노트북 (D017은 D017_ABtest/)
-├── 대시보드/         할인 정책 수익성 진단 대시보드 과제
+├── 대시보드/         할인 정책 수익성 진단 대시보드 (개인 과제)
 ├── amazon_task/     Amazon 판매 데이터 기반 추천 시스템 설계 (SQL)
+├── projects/        팀 프로젝트 4개 (ML, 대시보드, 시계열, 보험 CX)
 ├── .gitignore
 └── README.md
 ```
@@ -57,6 +58,16 @@ ai-data-bootcamp/
 | D022 | D022 | 피처 선택과 데이터 누수 | 작업 폴더에만 있음 (실습 미완료) |
 | D023 | D023 | 군집화와 차원축소 | 작업 폴더에만 있음 (실습 미완료) |
 | D024 | D024 | 모델 해석과 SHAP | 작업 폴더에만 있음 (실습 미완료) |
-| 대시보드 | [대시보드](대시보드/) | 할인 정책 수익성 진단 (Superstore 샘플 데이터, pandas, HTML) | main 반영됨 |
 
-기타 과제: [Amazon 판매 데이터 기반 추천 시스템 설계 (SQL)](amazon_task/)
+기타 과제: [할인 정책 수익성 대시보드 (Superstore, 개인 과제)](대시보드/) · [Amazon 판매 데이터 기반 추천 시스템 설계 (SQL)](amazon_task/)
+
+## 프로젝트
+
+부트캠프 팀 프로젝트의 최종 산출물(노트북·코드·보고서·대시보드·발표 자료)입니다. 데이터 파일은 포함하지 않았고, 각 폴더의 README에 출처를 적었습니다.
+
+| 프로젝트 | 주제 | 형태(팀 인원) | 사용 기술 | 폴더 |
+|---|---|---|---|---|
+| Olist 배송 지연·리뷰 분석 | 배송 지연이 리뷰 점수에 미치는 영향, 지연이 생기는 배송 단계 | ML 프로젝트 (4인 팀) | pandas, SciPy, statsmodels, scikit-learn | [01_olist-delivery-review](projects/01_olist-delivery-review/) |
+| Olist 셀러 유치 전략 대시보드 | 어떤 셀러를 유치해야 실제 판매(활성화)로 이어지는가 | 대시보드 프로젝트 (4인 팀) | pandas, SciPy, scikit-learn, HTML/JS | [02_olist-seller-acquisition-dashboard](projects/02_olist-seller-acquisition-dashboard/) |
+| 궁·능 관람객 예측과 인력 배치 | 운영 정보를 더할 때 예측 정확도·인력 비용이 얼마나 줄어드는가(FVA) | 시계열 분석보고서 (팀) | pandas, Chronos-2, 부트스트랩 | [03_timeseries-forecast-report](projects/03_timeseries-forecast-report/) |
+| 약관 난이도와 보험금 분쟁 결과 | 어려운 약관 조항이 분쟁 결과(인용)와 관련 있는가 | 보험 CX 프로젝트 (3인 팀) | statsmodels, kiwipiepy, BERTopic, Claude Code 에이전트, HTML/JS | [04_insurance-cx-terms-difficulty](projects/04_insurance-cx-terms-difficulty/) |

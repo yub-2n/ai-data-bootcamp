@@ -1,0 +1,677 @@
+<title>근거 확인 표 13</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+*,*:before,*:after{min-width:0}
+
+/* ── 토큰: step7_dashboard.html의 값을 그대로 가져온다 ── */
+:root{
+  --bg:#F5F6F8;--card:#FFF;--border:#E6E2E2;--grid:#ECECF0;--line:#C9C9D1;
+  --t1:#22222A;--t2:#3E3E48;--t3:#56565F;--t4:#6C6C76;
+  --c1:#7E2124;--c3:#C63B3F;
+  --navy:#31538F;--navy-l:#6E8CC4;--purple:#6E47A8;
+  --green:#1B7F49;--amber:#8A6100;--teal:#0d9488;--teal-bg:#f0fdfa;
+  --verm:#C4531A;
+  --green-bg:#E8F5EE;--red-bg:#FBEAE8;--amber-bg:#F6F0E2;--navy-bg:#EDF1F8;
+  --font:'Pretendard','Pretendard Variable','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14161A;--card:#1C1F24;--border:#2F343C;--grid:#2A2E35;--line:#3A404A;
+    --t1:#F0F2F5;--t2:#D2D6DC;--t3:#AAB0B8;--t4:#939AA2;
+    --c1:#C2504C;--c3:#E0736E;
+    --navy:#5B8AD1;--navy-l:#87A9DF;--purple:#9B7BD4;
+    --green:#3FA974;--amber:#C9922F;--teal:#2DD4BF;--teal-bg:#12211F;
+    --verm:#E8853F;
+    --green-bg:#163327;--red-bg:#331F1E;--amber-bg:#33291A;--navy-bg:#1B2536;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14161A;--card:#1C1F24;--border:#2F343C;--grid:#2A2E35;--line:#3A404A;
+  --t1:#F0F2F5;--t2:#D2D6DC;--t3:#AAB0B8;--t4:#939AA2;
+  --c1:#C2504C;--c3:#E0736E;
+  --navy:#5B8AD1;--navy-l:#87A9DF;--purple:#9B7BD4;
+  --green:#3FA974;--amber:#C9922F;--teal:#2DD4BF;--teal-bg:#12211F;
+  --verm:#E8853F;
+  --green-bg:#163327;--red-bg:#331F1E;--amber-bg:#33291A;--navy-bg:#1B2536;
+}
+
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:15px;line-height:1.6;padding:24px 28px 46px}
+.wrap{max-width:1230px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+
+.step-label{display:flex;align-items:center;gap:14px;padding:4px 0}
+.step-num{font-size:14.5px;font-weight:800;color:var(--c1);background:rgba(126,33,36,.08);
+  border:1px solid rgba(126,33,36,.2);padding:5px 13px;border-radius:20px;white-space:nowrap}
+.step-title{font-size:19px;font-weight:800;letter-spacing:-.2px;text-wrap:balance}
+.step-line{flex:1;height:1px;background:var(--border)}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;
+  display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.sec-hd{display:flex;align-items:flex-start;gap:11px;margin-bottom:10px}
+.sec-num{width:29px;height:26px;border-radius:6px;background:var(--c1);color:#fff;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sec-text{flex:1}
+.sec-title{font-size:17px;font-weight:700;line-height:1.3;text-wrap:balance}
+.sec-sub{font-size:13.5px;color:var(--t3);margin-top:3px;line-height:1.5}
+.pill{padding:2px 9px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.pill.go{background:var(--green-bg);color:var(--green)}
+
+/* ── 필터 · 척도 전환 ── */
+.filterbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:11px;
+  padding-bottom:11px;border-bottom:1px dashed var(--border)}
+.filterbar .flbl{font-size:13px;font-weight:700;color:var(--t3);margin-right:2px}
+.chip{border:1px solid var(--border);background:var(--card);color:var(--t2);font-family:var(--font);
+  font-size:13px;font-weight:700;padding:7px 14px;border-radius:20px;cursor:pointer;transition:all .12s}
+.chip:hover{border-color:var(--navy);color:var(--navy)}
+.chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.chip[aria-pressed="true"]:before{content:'\2713\00a0';font-size:10px}
+.chip.reset{margin-left:auto;color:var(--t4);font-weight:600}
+.chip:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+
+.scalebar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:11px;
+  padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:9px}
+.scalebar .flbl{font-size:13px;font-weight:700;color:var(--t3)}
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;font-family:var(--font);font-size:12.5px;font-weight:700;
+  color:var(--t3);padding:7px 13px;cursor:pointer;border-right:1px solid var(--border);transition:all .12s}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+.seg button:focus-visible{outline:2px solid var(--navy);outline-offset:-2px}
+.scalehint{font-size:12px;color:var(--t3);line-height:1.55;flex:1;min-width:220px}
+.scalehint b{color:var(--t2)}
+
+.fstate{font-size:13px;color:var(--t3);margin-bottom:12px}
+.fstate b{color:var(--t1)}
+
+/* ── 차트 + 표 ── */
+.evgrid{display:grid;grid-template-columns:1fr 1.25fr;gap:14px;align-items:start}
+.evchart{position:relative}
+.evempty2{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  text-align:center;font-size:13px;color:var(--t4);background:var(--card);padding:0 18px;line-height:1.7}
+.evempty2[hidden]{display:none}
+.evlegend{display:flex;gap:13px;flex-wrap:wrap;font-size:11.5px;color:var(--t3);margin:9px 2px 0}
+.evlegend .g{display:flex;align-items:center;gap:5px}
+.swatch{width:22px;height:10px;border-radius:2px;display:inline-block}
+.swatch.pos{background:var(--navy)}
+.swatch.neg{background:var(--verm)}
+.swatch.ns{background:repeating-linear-gradient(45deg,var(--t4),var(--t4) 2px,transparent 2px,transparent 5px);
+  border:1px solid var(--t4)}
+.evcap{font-size:12px;line-height:1.6;color:var(--t3);margin:9px 2px 0;
+  padding:9px 11px;background:var(--bg);border-radius:7px;border-left:3px solid var(--line)}
+.evcap b{color:var(--t2)}
+
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.evtable{width:100%;border-collapse:collapse;font-size:13.5px}
+.evtable th{text-align:left;font-size:12px;color:var(--t3);font-weight:700;padding:6px 7px;
+  border-bottom:1.5px solid var(--border);white-space:nowrap}
+.evtable td{padding:10px 8px;border-bottom:1px solid var(--border);color:var(--t2);line-height:1.6;vertical-align:top}
+.evrow{cursor:pointer}
+.evrow:hover td{background:var(--bg)}
+.evrow[aria-expanded="true"] td{background:var(--navy-bg)}
+.evrow .id{font-weight:800;color:var(--t1);white-space:nowrap}
+.evrow .claim{color:var(--t1);font-weight:600}
+.evrow .more{font-size:10px;color:var(--navy);font-weight:700;white-space:nowrap}
+.num{white-space:nowrap;font-variant-numeric:tabular-nums}
+.esfam{font-size:10.5px;color:var(--t4);font-weight:700;margin-left:3px}
+.esorig{font-size:10.5px;color:var(--t4);display:block;margin-top:1px}
+.warnmark{color:var(--c3);font-weight:800;cursor:help}
+.evdetail td{background:var(--bg);padding:12px 14px}
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:9px}
+.evdetail .dcell{border:1px solid var(--border);border-radius:8px;padding:8px 10px;background:var(--card)}
+.evdetail .dcell .k{font-size:11.5px;color:var(--t4);font-weight:700}
+.evdetail .dcell .v{font-size:14px;font-weight:800;color:var(--t1);margin-top:2px;font-variant-numeric:tabular-nums}
+.evdetail .plain{font-size:13.5px;color:var(--t2);line-height:1.8;border-left:3px solid var(--teal);
+  background:var(--teal-bg);border-radius:7px;padding:9px 12px}
+.evdetail .plain b{color:var(--t1)}
+.evempty{font-size:12px;color:var(--t4);padding:18px 6px;text-align:center}
+.badge-v{font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.badge-v.ok{background:var(--green-bg);color:var(--green)}
+.badge-v.no{background:var(--red-bg);color:var(--c3)}
+.badge-v.hold{background:var(--amber-bg);color:var(--amber)}
+
+.metric-note{margin-top:13px;padding-top:12px;border-top:1px dashed var(--border);font-size:13px;color:var(--t3);line-height:1.75}
+.metric-note dl{display:grid;grid-template-columns:auto 1fr;gap:7px 14px}
+.metric-note dt{font-weight:700;color:var(--t2);white-space:nowrap}
+.metric-note dd{margin:0}
+.metric-note b{color:var(--t2);font-weight:700}
+.metric-note code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+  background:var(--bg);padding:1px 5px;border-radius:4px;border:1px solid var(--border)}
+
+.changelog{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--amber);
+  border-radius:var(--r);padding:15px 18px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.changelog .ctag{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--amber);margin-bottom:9px}
+.changelog ol{margin:0;padding-left:19px;display:flex;flex-direction:column;gap:7px;font-size:13.5px;color:var(--t2);line-height:1.7}
+.changelog b{color:var(--t1)}
+
+@media (max-width:900px){
+  .evgrid{grid-template-columns:1fr}
+  body{padding:16px 13px 34px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+
+  <div class="step-label">
+    <span class="step-num">STEP 7</span>
+    <span class="step-title">근거 확인 — 채택된 원인별 증거 (효과크기 척도 수정본)</span>
+    <div class="step-line"></div>
+  </div>
+
+  <div class="card">
+    <div class="sec-hd">
+      <div class="sec-num">13</div>
+      <div class="sec-text">
+        <div class="sec-title">위 결론을 뒷받침하는 검정 결과 — 가지를 눌러 좁히고, 행을 눌러 자세히 본다</div>
+        <div class="sec-sub">막대는 <b>한 가지 자로만</b> 잰다 · 척도를 바꾸면 같은 근거의 순위가 어떻게 달라지는지 직접 확인할 수 있다</div>
+      </div>
+      <span class="pill go" id="evCountPill"></span>
+    </div>
+
+    <div class="filterbar" id="evFilters">
+      <span class="flbl">원인 가지</span>
+      <button class="chip" type="button" data-branch="A">A · 배송 품질</button>
+      <button class="chip" type="button" data-branch="B">B · 셀러 선별</button>
+      <button class="chip" type="button" data-branch="C">C · 유입 채널</button>
+      <button class="chip" type="button" data-branch="D">D · 품목</button>
+      <button class="chip" type="button" data-branch="E">토대 · 셀러↔GMV</button>
+      <span class="flbl" style="margin-left:10px">판정</span>
+      <button class="chip" type="button" data-verdict="adopted" aria-pressed="true">채택된 것만</button>
+      <button class="chip reset" type="button" id="evReset">↺ 전체 초기화</button>
+    </div>
+
+    <div class="scalebar">
+      <span class="flbl">막대 척도</span>
+      <div class="seg" id="scaleSeg" role="group" aria-label="막대 척도 선택">
+        <button type="button" data-scale="r" aria-pressed="true">공통 척도 (r · φ · ρ)</button>
+        <button type="button" data-scale="unit" aria-pressed="false">실무 단위 (%p)</button>
+      </div>
+      <div class="scalehint" id="scaleHint"></div>
+    </div>
+
+    <div class="fstate" id="evState"></div>
+
+    <div class="evgrid">
+      <div>
+        <div class="evchart" id="evChartBox"><canvas id="evChart"></canvas>
+          <div class="evempty2" id="evChartEmpty" hidden></div>
+        </div>
+        <div class="evlegend">
+          <span class="g"><i class="swatch pos"></i>양(+) 방향</span>
+          <span class="g"><i class="swatch neg"></i>음(−) 방향</span>
+          <span class="g"><i class="swatch ns"></i>p ≥ 0.05 (비유의)</span>
+          <span class="g" style="color:var(--t4)">막대 옆 <b style="color:var(--t3)">r φ ρ V</b> = 어떤 지표로 잰 값인지</span>
+        </div>
+        <div class="evcap" id="evChartCap"></div>
+        <div class="metric-note" id="evChartNote"></div>
+      </div>
+
+      <div class="tablewrap">
+        <table class="evtable">
+          <thead><tr>
+            <th>ID</th><th>주장</th><th id="thEs">효과크기</th><th>p-value</th><th>표본 n</th><th>판정</th><th></th>
+          </tr></thead>
+          <tbody id="evBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="changelog">
+    <div class="ctag">원본에서 무엇을 바꿨나</div>
+    <ol>
+      <li><b>Cohen's h를 걷어냈다.</b> h의 범위는 0~π(≈3.14)라 0~1 축에 올릴 수 없고, 기준선도 .20/.50/.80으로 나머지(.10/.30/.50)와 다르다. D-2·D-3은 같은 2×2를 <b>φ</b>로 다시 계산했다 — D-2 0.374 → <b>0.106</b>, D-3 0.196 → <b>0.040</b>.</li>
+      <li><b>다군 표(B-1·C-1)는 의사결정이 쓰는 쌍대비의 φ로 바꿨다.</b> B-1은 online_big vs offline → <b>φ=0.374</b>, C-1은 paid_search vs email → <b>φ=0.131</b>. 전체표 Cramér's V는 표에 병기했다.</li>
+      <li><b>부호를 복원했다.</b> A-3은 실제로 <b>−0.227</b>인데 원본은 0.227로 그려 A-6(+0.248)과 같은 방향으로 보였다.</li>
+      <li><b>A-2에 막대가 생겼다.</b> H=299.6은 축에 못 올리지만 ε² = H/(n−1) = 0.0080 → <b>r=0.090</b>으로 환산된다. p=7.9e-43이지만 효과는 이 표에서 가장 작은 축에 속한다 — 원본에서 빠져 있어 안 보이던 사실이다.</li>
+      <li><b>비유의 항목을 빗금 처리했다.</b> A-6(p=0.133)은 원본에서 B-1보다 긴 막대였다.</li>
+      <li><b>축 기준선을 척도별로 맞췄다.</b> r·φ·ρ는 .10/.30/.50, 실무 단위는 기준선 없음.</li>
+      <li><b>D-4에 ⚠를 달았다.</b> 1·3·4·6단계(χ²=0.29, n=513)와 대시보드(χ²=0.227, n=460)의 값이 다르다 — 여기서는 대시보드 값을 썼다.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   근거 표 (EV) — es 를 척도별 객체로 바꾼 것이 원본과의 유일한 구조 차이다.
+     esR    : 공통 척도. r 계열(r · φ · ρ · V)로 통일. 부호 유지.
+     esUnit : 실무 단위. %p 만 축에 올린다(단위가 섞이면 같은 실수를 반복한다).
+     sig    : p < 0.05 여부. 막대 빗금 처리에 쓴다.
+   ========================================================================= */
+const EV = [
+ {id:'A-1', br:'A', v:'ok', sig:true, pv:'<1e-300', nn:'38,624',
+  claim:'정시 배송에 실패하면 평점이 떨어진다',
+  esR:0.510, esFam:'r', esOrig:null,
+  esUnit:1.58, unitSuffix:'점', unitLabel:'평점 1.58점 하락',
+  test:'Mann-Whitney U 검정', stat:'p < 1e-300 · rank-biserial r = 0.510',
+  n:'주문 38,624건 (정시 35,288 · 지연 3,336)',
+  plain:'정시 도착 주문의 평균 평점은 <b>4.33점</b>, 지연은 <b>2.75점</b>. rank-biserial r=0.510은 확률로 읽힌다 — <b>정시 1건과 지연 1건을 무작위로 뽑으면 75.5% 확률로 정시 쪽 평점이 높다</b>. 이 표에서 가장 큰 효과다.'},
+
+ {id:'A-2', br:'A', v:'ok', sig:true, pv:'7.9e-43', nn:'37,374',
+  claim:'품목마다 평점 수준이 다르다',
+  esR:0.090, esFam:'r', esOrig:'H = 299.6 (k=38)',
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'Kruskal-Wallis 검정', stat:'H = 299.557, p = 7.9e-43 · ε² = 0.0080',
+  n:'주문 37,374건 · 품목 38개',
+  plain:'<b>p값과 효과크기가 가장 크게 엇갈리는 행이다.</b> p=7.9e-43은 "우연이 아니다"만 말하고, 실제 크기는 ε²=H/(n−1)=0.0080 → r=0.090으로 <b>이 표에서 가장 작은 축</b>이다. 품목 간 평점 차이는 실재하지만 좁다 — G2 필터(평점 4.0 미만 제외)의 근거로는 충분하고, 품목 선정의 주 근거로 쓰기에는 약하다.'},
+
+ {id:'A-3', br:'A', v:'ok', sig:true, pv:'<1e-300', nn:'38,624',
+  claim:'배송이 오래 걸릴수록 평점이 낮다',
+  esR:-0.227, esFam:'ρ', esOrig:'카테고리 단위 −0.674',
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'Spearman 상관', stat:'주문 ρ = −0.227 (p < 1e-300) · 카테고리 ρ = −0.674',
+  n:'주문 38,624건 / 카테고리 38개',
+  plain:'집계 수준에 따라 <b>−0.227(주문)</b>과 <b>−0.674(카테고리)</b> 두 값이 있다. 막대는 표본이 큰 주문 단위만 그렸다 — 두 값을 한 막대에 합칠 수 없기 때문이고, 원본은 이 중 작은 쪽만 그리면서 그 사실을 표시하지 않았다. 카테고리 값은 반드시 A-6과 함께 읽는다.'},
+
+ {id:'A-4', br:'A', v:'ok', sig:null, pv:'—', nn:'2,757',
+  claim:'셀러와 고객이 같은 주면 평점이 높다',
+  esR:null, esFam:null, esOrig:'검정 없음 (기술통계)',
+  esUnit:null, unitSuffix:'점', unitLabel:'평점 0.19점 · 배송 6.1일',
+  test:'기술통계 비교 (검정 미실시)', stat:'평점 4.296 vs 4.106 · 배송 5.98일 vs 12.08일',
+  n:'housewares 주문 2,757건',
+  plain:'같은 주 배송은 평균 6.0일, 다른 주는 12.1일이고 평점은 0.19점 차이다. <b>검정을 돌리지 않았으므로 p값도 효과크기도 없다</b> — 원본 표에 붙어 있던 p=1.0e-04는 근거를 찾을 수 없어 뺐다. 방향 근거로만 쓴다.'},
+
+ {id:'A-5', br:'A', v:'hold', sig:true, pv:'2.4e-06', nn:'772',
+  claim:'초기 품질이 좋으면 판매를 지속한다',
+  esR:0.169, esFam:'ρ', esOrig:null,
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'Spearman 상관', stat:'ρ = +0.169, p = 2.4e-6',
+  n:'셀러 772명',
+  plain:'유의하지만 작다. 방향은 맞아도 <b>"초기 평점만 관리하면 지속 판매가 보장된다"고 말할 수준은 아니다</b> — 부분 채택.'},
+
+ {id:'A-6', br:'A', v:'hold', sig:false, pv:'0.133', nn:'40',
+  claim:'A-1의 관계는 집계 수준에 따라 사라진다',
+  esR:0.248, esFam:'ρ', esOrig:null,
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'Spearman 상관 (카테고리 단위)', stat:'ρ = +0.248, p = 0.133 (비유의)',
+  n:'카테고리 40개',
+  plain:'<b>원본 막대에서 가장 위험했던 행이다.</b> 0.248로 B-1(0.220)보다 길게 그려졌지만 <b>p=0.133으로 비유의</b>하다. 여기서는 빗금으로 구분한다 — 길이가 아니라 빗금이 먼저 읽혀야 한다.'},
+
+ {id:'B-1', br:'B', v:'ok', sig:true, pv:'1.6e-05', nn:'663',
+  claim:'중대형 온라인 사업자가 더 잘 활성화된다',
+  esR:0.374, esFam:'φ', esOrig:'전체 7×2 Cramér’s V = 0.220',
+  esUnit:37.5, unitSuffix:'%p', unitLabel:'활성화율 +37.5%p',
+  test:'카이제곱 (7×2) + 쌍대비 φ', stat:'χ² = 32.05, dof 6, p = 1.6e-5 · V = 0.220',
+  n:'계약 663건 (online_big 100 · offline 83)',
+  plain:'online_big <b>64.0%</b> vs offline <b>26.5%</b> → 쌍대비 <b>φ=0.374</b>로 이 표에서 가장 강한 선별 레버다. 전체 7군 표의 V=0.220보다 큰 이유는 <b>V가 7개 군 전체의 평균적 연관을 재는 반면 φ는 실제로 행동 규칙이 쓰는 두 군만 비교</b>하기 때문이다. ML 오즈비 2.06배와 방향이 일치한다.<br><b style="color:var(--c3)">주의:</b> 1·3·4·6단계 본문은 이 검정을 χ²=32.0, dof <b>5</b>, p=<b>5.9e-6</b>, n=<b>651</b>로 적고 있다. 대시보드 원자료(7군, 합 663)에 맞는 값은 dof 6 · p=1.6e-5 · n=663이다.'},
+
+ {id:'B-2', br:'B', v:'ok', sig:true, pv:'1.9e-04', nn:'658',
+  claim:'유통(reseller)이 제조보다 잘 활성화된다',
+  esR:0.149, esFam:'φ', esOrig:'Cramér’s V = 0.145 (동일 값)',
+  esUnit:16.1, unitSuffix:'%p', unitLabel:'활성화율 +16.1%p',
+  test:'카이제곱 (2×2)', stat:'χ² = 13.88, dof 1, p = 1.9e-4 · φ = V = 0.145',
+  n:'계약 658건 (유통 459 · 제조 199)',
+  plain:'유통 <b>49.2%</b> vs 제조 <b>33.2%</b>. 2×2 표라 <b>Cramér’s V가 곧 φ</b>이므로 원본 값이 그대로 공통 척도에 올라간다. <b>원본 막대에서는 D-2(h=0.374)보다 짧게 보였지만, 같은 자로 재면 B-2(0.149)가 D-2(0.106)보다 크다</b> — 순위가 뒤집히는 대표 사례다.'},
+
+ {id:'B-3', br:'B', v:'no', sig:false, pv:'0.605', nn:'501',
+  claim:'셀러 성향 라벨로 활성화를 예측할 수 있다',
+  esR:0.061, esFam:'V', esOrig:'다군 표 · 쌍대비 아님',
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'카이제곱 · log-rank · ML 3종', stat:'p = 0.605 / 0.628 / AUC −0.008 · V = 0.061',
+  n:'계약 501건',
+  plain:'세 방법 모두에서 관계가 없다. ML에서는 넣으면 예측력이 오히려 떨어졌다(AUC −0.008). <b>선별 기준에서 제외</b>한다.<br><b style="color:var(--c3)">표기:</b> 다군 표의 V라 쌍대비 φ와 엄밀히 같은 자는 아니다 — 그래서 막대 옆에 <b>V</b>로 표시했다.'},
+
+ {id:'B-4', br:'B', v:'hold', sig:null, pv:'—', nn:'842',
+  claim:'셀러 자기신고 정보를 선별에 쓸 수 있다',
+  esR:null, esFam:null, esOrig:'측정 불가',
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'결측률 점검', stat:'결측 91.8 ~ 92.5%',
+  n:'계약 842건',
+  plain:'열 곳 중 아홉 곳이 비어 있어 <b>애초에 분석이 불가능</b>하다. 없는 데이터를 추정해 채우지 않고 "측정 불가"로 남겨둔다.'},
+
+ {id:'C-1', br:'C', v:'ok', sig:true, pv:'3.0e-25', nn:'8,000',
+  claim:'유입 채널이 계약률을 가른다',
+  esR:0.131, esFam:'φ', esOrig:'전체 11×2 Cramér’s V = 0.133',
+  esUnit:9.3, unitSuffix:'%p', unitLabel:'계약률 +9.3%p',
+  test:'카이제곱 (11×2) + 쌍대비 φ', stat:'χ² = 140.7, dof 10, p = 3.0e-25 · V = 0.133',
+  n:'리드 8,000건 (paid_search 1,586 · email 493)',
+  plain:'paid_search <b>12.3%</b> vs email <b>3.0%</b> → φ=0.131. 채널은 <b>계약을 싸게 따오는 용도로는 분명히 의미가 있다</b> — 다만 그 효과는 C-2에서 보듯 활성화로 이어지지 않는다.'},
+
+ {id:'C-2', br:'C', v:'no', sig:false, pv:'0.069', nn:'612',
+  claim:'유입 채널이 활성화율도 가른다',
+  esR:0.119, esFam:'V', esOrig:'다군 표 · 쌍대비 아님',
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'카이제곱 + log-rank', stat:'이진 p = 0.069 (V=0.119) · log-rank p = 0.111',
+  n:'코호트 612건',
+  plain:'계약까지는 채널이 영향을 주지만 <b>계약 이후 실제로 파는지는 채널과 무관</b>했다. 두 방법 모두 비유의라 빗금 처리했다. 활성화 목표는 채널이 아니라 상담 순서(선별)로 만든다.'},
+
+ {id:'C-3', br:'C', v:'no', sig:false, pv:'0.23 / 0.28', nn:'—',
+  claim:'대상 품목마다 잘 맞는 채널이 따로 있다',
+  esR:null, esFam:null, esOrig:'효과크기 미산출',
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'카이제곱 검정', stat:'housewares p = 0.23 · pet_shop p = 0.28',
+  n:'품목별 계약 (원본에 n 미기재)',
+  plain:'품목별 채널 전략을 따로 짤 근거가 없다. <b>채널 운영은 전사 공통 기준 하나로 유지</b>한다.<br><b style="color:var(--c3)">주의:</b> 원본은 이 행의 표본 n을 C-2와 같은 612로 적어 놨는데, C-2에서 복사된 값으로 보인다.'},
+
+ {id:'D-1', br:'D', v:'ok', sig:true, pv:'0.0181', nn:'788',
+  claim:'품목 세그먼트에 따라 활성화 속도가 다르다',
+  esR:null, esFam:null, esOrig:'유계 효과크기 없음',
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'log-rank 검정 (소표본 n<20 병합)', stat:'χ² = 25.80, dof 13, p = 0.0181',
+  n:'계약 788건 (필터 방식은 661건)',
+  plain:'다군 log-rank에는 <b>0~1로 유계인 표준 효과크기가 없다</b> — 억지로 환산하지 않고 표에만 둔다. 소표본을 버리는 방식(χ²=27.4, n=661)으로 계산해도 결론은 같다.<br><b style="color:var(--c3)">주의:</b> 4단계 §1은 "661건(128건 제외)"이라 적었는데 788 − 661 = <b>127</b>이다. 128은 결측 1건을 빼기 전 789를 기준으로 한 값이다.'},
+
+ {id:'D-2', br:'D', v:'ok', sig:true, pv:'0.0052', nn:'59',
+  claim:'housewares 셀러가 평균보다 잘 활성화된다',
+  esR:0.106, esFam:'φ', esOrig:'Cohen’s h = 0.374 (자신 제외) / 0.341 (전체 평균)',
+  esUnit:18.6, unitSuffix:'%p', unitLabel:'활성화율 +18.6%p',
+  test:'이항검정 + Wilson CI + 2×2 φ', stat:'p = 0.0052 (자신 제외) / 0.0121 (전체 평균) · φ = 0.106',
+  n:'housewares 59건 중 36건 활성화 (나머지 608건 중 258건)',
+  plain:'활성화율 <b>61.0%</b>, 자신 제외 평균 42.4% 대비 <b>+18.6%p</b>. <b>원본이 h=0.374로 그린 막대가 φ로는 0.106으로 줄어든다</b> — h는 집단 크기를 무시하고, φ는 59건 대 608건이라는 크기 차이를 반영하기 때문이다. 둘 다 맞는 값이지만 <b>다른 질문의 답</b>이다.<br><b style="color:var(--c3)">주의:</b> 1단계·4단계 §6은 p=0.0052(자신 제외)와 h=0.341(전체 평균)을 <b>한 줄에 섞어</b> 적고 있다. 기준을 맞추면 0.0052↔0.374, 0.0121↔0.341이다.'},
+
+ {id:'D-3', br:'D', v:'hold', sig:false, pv:'0.330', nn:'26',
+  claim:'pet_shop도 평균을 상회한다',
+  esR:0.040, esFam:'φ', esOrig:'Cohen’s h = 0.196 ~ 0.204',
+  esUnit:10.2, unitSuffix:'%p', unitLabel:'활성화율 +10.2%p',
+  test:'이항검정 + Wilson CI + 2×2 φ', stat:'p = 0.330 · 95% CI [35.5, 71.2] · φ = 0.040',
+  n:'pet_shop 26건 중 14건 활성화',
+  plain:'53.8%로 평균보다 높아 보이지만 <b>신뢰구간이 전체 평균(44.1%)을 포함</b>한다 — 26건으로는 우연을 배제할 수 없다. φ=0.040은 D-4(0.022) 바로 위로, <b>기각된 가설과 크게 다르지 않은 크기</b>다. 유치 목표는 GMV 갭 근거로 유지하되 "활성화율이 높은 품목"이라는 주장은 보류한다.'},
+
+ {id:'D-4', br:'D', v:'no', sig:false, pv:'0.634', nn:'460',
+  claim:'수요-공급 갭이 큰 품목일수록 활성화도 잘 된다',
+  esR:0.022, esFam:'φ', esOrig:'⚠ 문서 간 값 불일치', warn:true,
+  esUnit:2.9, unitSuffix:'%p', unitLabel:'활성화율 +2.9%p',
+  test:'카이제곱 (2×2)', stat:'χ² = 0.227, dof 1, p = 0.6336 · φ = 0.022',
+  n:'계약 460건 (통과 232 · 미통과 228)',
+  plain:'"기회가 큰 품목이면 셀러도 잘 정착하겠지"라는 가정은 <b>데이터로 지지되지 않았다</b>. 갭은 후보를 고르는 출발점으로만 쓴다.<br><b style="color:var(--c3)">⚠ 값 불일치:</b> 1·3·4·6단계 본문은 <b>χ²=0.29, p=0.593, V=0.024, 192건 vs 321건(n=513)</b>으로 적고, 대시보드는 <b>χ²=0.227, p=0.6336, V=0.022, 232 vs 228(n=460)</b>으로 적는다. 서로 다른 분석이며 어느 쪽이 최종본인지 정해야 한다. 이 표는 대시보드 값을 썼다.'},
+
+ {id:'D-5', br:'D', v:'no', sig:false, pv:'0.44', nn:'40',
+  claim:'셀러 1인당 매출이 높으면 셀러가 희소한 품목이다',
+  esR:null, esFam:null, esOrig:'정의에 따라 부호가 뒤집힘',
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'Spearman 상관 (정의 3종)', stat:'ρ = +0.13 / −0.83 / −0.33',
+  n:'품목 40개',
+  plain:'어떻게 정의하느냐에 따라 <b>상관의 부호가 반대로 나온다</b>. <b>부호가 뒤집히는 값은 한 막대로 그릴 수 없다</b> — 그래서 표에만 둔다. 근거로 쓸 수 없어 기각했다.'},
+
+ {id:'토대', br:'E', v:'ok', sig:true, pv:'1.5e-09', nn:'737',
+  claim:'셀러가 늘면 거래액(GMV)도 늘어난다',
+  esR:null, esFam:null, esOrig:'β는 기울기 — 유계 아님',
+  esUnit:null, unitSuffix:null, unitLabel:null,
+  test:'품목·월 고정효과 회귀 (품목 클러스터 SE)', stat:'β = 0.93, 95% CI [0.677, 1.184], t = 7.20',
+  n:'품목-월 737개 관측',
+  plain:'β는 <b>기울기지 0~1 효과크기가 아니다</b> — 축에 올릴 수 없어 표에만 둔다. "신규 셀러가 기존 매출을 나눠 갖기만 한다"는 반론에 대한 답으로, <b>β=0은 확실히 기각</b>되고 대부분의 대안 명세에서 β=1과 구별되지 않는다. 다만 동시기 상관이라 인과 확정에는 파일럿이 필요하다.'},
+];
+
+const BRANCH_NAME = {A:'A · 배송 품질', B:'B · 셀러 선별', C:'C · 유입 채널', D:'D · 품목', E:'토대 · 셀러↔GMV'};
+const V_NAME = {ok:'채택', no:'기각', hold:'보류·부분'};
+
+let fBranches = new Set();
+let fAdoptedOnly = true;
+let openRow = null;
+let scale = 'r';                       // 'r' | 'unit'
+let chart = null;
+
+const esOf  = e => scale==='r' ? e.esR : e.esUnit;
+const sfxOf = e => scale==='r' ? '' : (e.unitSuffix||'');
+
+function cssVar(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+function themeColors(){
+  return {ink:cssVar('--t1'), tick:cssVar('--t3'), grid:cssVar('--grid'),
+          navy:cssVar('--navy'), verm:cssVar('--verm'), grey:cssVar('--t4'), card:cssVar('--card')};
+}
+
+/* 빗금 패턴 — 비유의 항목은 색이 아니라 질감으로 구분한다(색약 대응) */
+function hatch(color){
+  const c = document.createElement('canvas'); c.width = c.height = 8;
+  const x = c.getContext('2d');
+  x.strokeStyle = color; x.lineWidth = 2.2;
+  x.beginPath(); x.moveTo(-2,10); x.lineTo(10,-2); x.moveTo(2,14); x.lineTo(14,2); x.stroke();
+  return x.createPattern(c,'repeat');
+}
+
+function evFiltered(){
+  return EV.filter(e => (fBranches.size===0 || fBranches.has(e.br)) && (!fAdoptedOnly || e.v==='ok'));
+}
+
+function syncChipCounts(){
+  document.querySelectorAll('#evFilters .chip[data-branch]').forEach(btn=>{
+    const b = btn.dataset.branch;
+    const n = EV.filter(e=>e.br===b && (!fAdoptedOnly || e.v==='ok')).length;
+    btn.innerHTML = `${BRANCH_NAME[b]} <b style="opacity:.62;font-weight:800">${n}</b>`;
+  });
+}
+
+function renderScaleHint(){
+  document.getElementById('scaleHint').innerHTML = scale==='r'
+    ? `모든 막대를 <b>상관 계열 하나(r · φ · ρ)</b>로 통일했다 — 값끼리 직접 비교된다. 기준선은 <b>0.1 작음 · 0.3 중간 · 0.5 큼</b>.`
+    : `<b>%p 하나만</b> 축에 올린다. 평점(점)·배송일(일)은 단위가 달라 같은 축에 못 놓으므로 표에만 둔다 — 이걸 섞는 것이 원본의 문제였다.`;
+  document.getElementById('thEs').textContent = scale==='r' ? '효과크기 (공통 척도)' : '효과크기 (실무 단위)';
+}
+
+function renderEvidence(){
+  const rows = evFiltered();
+  syncChipCounts();
+  renderScaleHint();
+
+  const brTxt = fBranches.size===0 ? '전체 가지' : [...fBranches].map(b=>BRANCH_NAME[b]).join(' + ');
+  document.getElementById('evState').innerHTML =
+    `지금 보고 있는 것: <b>${brTxt}</b> · <b>${fAdoptedOnly?'채택된 가설만':'채택·보류·기각 전부'}</b> → <b>${rows.length}건</b>` +
+    ` <span style="color:var(--t4)">· 전체 ${EV.length}건 = 채택 ${EV.filter(e=>e.v==='ok').length} ·` +
+    ` 보류·부분 ${EV.filter(e=>e.v==='hold').length} · 기각 ${EV.filter(e=>e.v==='no').length} (토대 1건 포함)</span>`;
+
+  const drawable = rows.filter(e=>esOf(e)!=null).length;
+  document.getElementById('evCountPill').textContent =
+    drawable===rows.length ? `${rows.length}건 표시 중` : `표 ${rows.length}건 · 그래프 ${drawable}건`;
+
+  document.getElementById('evBody').innerHTML = rows.length===0
+    ? `<tr><td colspan="7" class="evempty">조건에 맞는 근거가 없습니다 — 필터를 초기화해 보세요</td></tr>`
+    : rows.map(e=>{
+        const open = openRow===e.id;
+        const val  = esOf(e);
+        const esCell = val==null
+          ? `<span style="color:var(--t4)">—</span><span class="esorig">${e.esOrig||''}</span>`
+          : `<b>${val>0&&scale==='unit'?'+':''}${scale==='r'?val.toFixed(3):val.toFixed(1)}</b>` +
+            `${scale==='r'?`<span class="esfam">${e.esFam}</span>`:`<span class="esfam">${e.unitSuffix}</span>`}` +
+            `${e.warn?' <span class="warnmark" title="문서 간 값 불일치">⚠</span>':''}` +
+            `<span class="esorig">${scale==='r'?(e.esOrig||''):(e.unitLabel||'')}</span>`;
+        return `<tr class="evrow" data-id="${e.id}" aria-expanded="${open}">
+            <td class="id">${e.id}</td>
+            <td class="claim">${e.claim}<div style="font-size:10.5px;color:var(--t4);font-weight:500;margin-top:2px">${BRANCH_NAME[e.br]}</div></td>
+            <td class="num">${esCell}</td>
+            <td class="num">${e.pv||'—'}${e.sig===false?' <span style="color:var(--t4);font-size:10.5px">비유의</span>':''}</td>
+            <td class="num">${e.nn||'—'}</td>
+            <td><span class="badge-v ${e.v}">${V_NAME[e.v]}</span></td>
+            <td class="more">${open?'▲ 닫기':'▼ 자세히'}</td>
+          </tr>` +
+          (open ? `<tr class="evdetail"><td colspan="7">
+            <div class="dgrid">
+              <div class="dcell"><div class="k">검정 방법</div><div class="v" style="font-size:12px">${e.test}</div></div>
+              <div class="dcell"><div class="k">통계량 · p값</div><div class="v" style="font-size:12px">${e.stat}</div></div>
+              <div class="dcell"><div class="k">표본</div><div class="v" style="font-size:12px">${e.n}</div></div>
+            </div>
+            <div class="plain"><b>쉽게 말하면 —</b> ${e.plain}</div>
+          </td></tr>` : '');
+      }).join('');
+
+  document.querySelectorAll('.evrow').forEach(tr=>{
+    tr.onclick = ()=>{ openRow = (openRow===tr.dataset.id) ? null : tr.dataset.id; renderEvidence(); };
+  });
+  renderEvChart();
+}
+
+/* 막대 끝에 값을 직접 쓴다 — 색·질감을 구분하지 못해도 값을 읽을 수 있게 */
+const valueLabels = {
+  id:'valueLabels',
+  afterDatasetsDraw(ch, args, opts){
+    if(!opts || !opts.formatter) return;
+    const {ctx} = ch, c = themeColors();
+    ctx.save();
+    ctx.font = '700 10.5px "Noto Sans KR", sans-serif';
+    ctx.fillStyle = c.tick; ctx.textBaseline = 'middle';
+    ch.getDatasetMeta(0).data.forEach((bar,i)=>{
+      const raw = ch.data.datasets[0].data[i];
+      if(raw==null) return;
+      const txt = opts.formatter(raw,i);
+      const zero = ch.scales.x.getPixelForValue(0);
+      const neg = bar.x < zero;
+      ctx.textAlign = neg ? 'right' : 'left';
+      ctx.fillText(txt, bar.x + (neg ? -7 : 7), bar.y);
+    });
+    ctx.restore();
+  }
+};
+
+function renderEvChart(){
+  const c = themeColors();
+  const all  = evFiltered();
+  const rows = all.filter(e=>esOf(e)!=null).sort((a,b)=>Math.abs(esOf(b))-Math.abs(esOf(a)));
+  const out  = all.filter(e=>esOf(e)==null);
+
+  if(chart){ chart.destroy(); chart = null; }
+
+  const cv = document.getElementById('evChart');
+  const box = document.getElementById('evChartBox');
+  const emptyBox = document.getElementById('evChartEmpty');
+  box.style.height = Math.max(150, rows.length*30 + 62) + 'px';
+
+  const outTxt = out.map(e=>`<b>${e.id}</b> ${e.esOrig||''}`).join(' · ');
+  const cap = document.getElementById('evChartCap');
+  const why = scale==='r'
+    ? '0~1 상관 계열로 환산되는 값이 없어'
+    : '%p로 표현되는 값이 없어';
+  if(out.length===0)      cap.innerHTML = `조건에 맞는 <b>${rows.length}건</b>을 모두 그렸다.`;
+  else if(rows.length===0) cap.innerHTML = `이 조건의 <b>${all.length}건</b>(${outTxt})은 ${why} 막대로 그릴 수 없다 — 오른쪽 표에서 확인한다.`;
+  else                     cap.innerHTML = `조건에 맞는 <b>${all.length}건</b> 중 <b>${rows.length}건을 그렸다.</b> 나머지 ${out.length}건(${outTxt})은 ${why} 표에만 있다 — 빠뜨린 것이 아니다.`;
+
+  cv.style.visibility = rows.length===0 ? 'hidden' : 'visible';
+  emptyBox.hidden = rows.length!==0;
+  if(rows.length===0){
+    emptyBox.innerHTML = out.length
+      ? `이 조건의 ${out.length}건은 ${why}<br>막대로 비교할 수 없다 — 오른쪽 표에서 확인한다`
+      : `조건에 맞는 근거가 없다 — 필터를 초기화해 보세요`;
+    return;
+  }
+
+  const hatchGrey = hatch(c.grey);
+  const fillOf = e => e.sig===false ? hatchGrey : (esOf(e) < 0 ? c.verm : c.navy);
+  const maxAbs = Math.max(...rows.map(e=>Math.abs(esOf(e))));
+  const bound  = scale==='r' ? Math.max(0.6, maxAbs*1.25) : maxAbs*1.25;
+  const hasNeg = rows.some(e=>esOf(e) < 0);
+
+  /* r 척도에서만 Cohen 기준선(0.1 / 0.3 / 0.5)을 그린다 */
+  const rubric = {
+    id:'rubric',
+    beforeDatasetsDraw(ch){
+      if(scale!=='r') return;
+      const {ctx} = ch, x = ch.scales.x, ya = ch.chartArea;
+      ctx.save(); ctx.setLineDash([3,3]); ctx.lineWidth = 1; ctx.strokeStyle = c.grid;
+      [0.1,0.3,0.5].forEach(v=>{
+        [v,-v].forEach(s=>{
+          if(s < x.min || s > x.max) return;
+          const px = x.getPixelForValue(s);
+          ctx.beginPath(); ctx.moveTo(px, ya.top); ctx.lineTo(px, ya.bottom); ctx.stroke();
+        });
+      });
+      ctx.restore();
+    }
+  };
+
+  chart = new Chart(cv, {
+    type:'bar',
+    data:{
+      labels: rows.map(e=>`${e.id} ${scale==='r'?e.esFam:(e.unitSuffix||'')}  ${e.v==='ok'?'●':(e.v==='no'?'✕':'△')}`),
+      datasets:[{ data: rows.map(esOf), backgroundColor: rows.map(fillOf),
+                  borderColor: rows.map(e=>e.sig===false?c.grey:'transparent'), borderWidth:1,
+                  borderRadius:3, barPercentage:.82 }]
+    },
+    options:{
+      indexAxis:'y',
+      layout:{padding:{right:46, left:hasNeg?46:6}},
+      plugins:{
+        legend:{display:false},
+        valueLabels:{ formatter:v => scale==='r' ? v.toFixed(3) : (v>0?'+':'')+v.toFixed(1)+'%p' },
+        tooltip:{ callbacks:{ label:ctx=>{
+          const e = rows[ctx.dataIndex];
+          const l = [` ${e.claim}`, ` 판정: ${V_NAME[e.v]} · p = ${e.pv}`];
+          if(scale==='r') l.push(` ${e.esFam} = ${esOf(e).toFixed(3)}`);
+          else l.push(` ${e.unitLabel||''}`);
+          if(e.esOrig) l.push(` 원본 표기: ${e.esOrig}`);
+          if(e.sig===false) l.push(' ⚠ p ≥ 0.05 — 크기를 해석하지 않는다');
+          return l;
+        } } }
+      },
+      scales:{
+        x:{ min: hasNeg ? -bound : 0, max: bound,
+            grid:{color:c.grid, drawTicks:false},
+            border:{color:c.grid},
+            title:{display:true, color:c.tick, font:{size:10.5},
+              text: scale==='r' ? '상관 계열 효과크기 (점선 = 0.1 작음 · 0.3 중간 · 0.5 큼)'
+                                : '활성화율·계약률 차이 (%p) — 단위가 같은 항목만'},
+            ticks:{color:c.tick, font:{size:9.5}} },
+        y:{ grid:{display:false}, border:{display:false},
+            ticks:{color:c.ink, font:{size:10.5, weight:'700'}} }
+      },
+      animation:false, maintainAspectRatio:false, responsive:true
+    },
+    plugins:[valueLabels, rubric]
+  });
+}
+
+document.getElementById('evChartNote').innerHTML = `
+  <dl>
+    <dt>이 막대는</dt>
+    <dd>효과크기다. 원본과 달리 <b>한 척도 안에서만</b> 비교한다 — "효과크기"는 단위 이름이 아니라
+        <b>범주 이름</b>이라서, r·ρ·V·h를 한 축에 세우면 같은 데이터가 3배 넘게 달라 보인다.
+        (실례: D-2는 Cohen's h로 0.374, φ로 0.106)</dd>
+    <dt>왜 h를 뺐나</dt>
+    <dd>Cohen's h의 범위는 <b>0 ~ π(≈3.14)</b>라 0~1 축에 올릴 수 없고, 기준선도
+        <b>.20/.50/.80</b>으로 r·V의 <b>.10/.30/.50</b>과 다르다. 4단계 "용어 5개"는 .20/.50/.80을,
+        원본 7단계 막대는 .10/.30/.50을 쓰고 있어 <b>같은 h값이 두 페이지에서 다른 크기로 읽혔다</b>.</dd>
+    <dt>φ와 V의 차이</dt>
+    <dd>2×2 표에서는 <code>Cramér's V = φ = 상관계수</code>로 같은 값이다(B-2·D-2·D-3·D-4).
+        다군 표(B-1 7×2 · C-1 11×2)는 V가 <b>군 전체의 평균적 연관</b>을 재므로, 실제 행동 규칙이 쓰는
+        <b>두 군의 쌍대비 φ</b>를 대신 그렸다. 쌍대비가 없는 B-3·C-2는 V 그대로 두고 막대 옆에 <b>V</b>로 표시했다.</dd>
+    <dt>순위가 바뀐 곳</dt>
+    <dd>원본에서 <b>D-2(0.374) &gt; B-2(0.145)</b>였지만, 같은 자로 재면 <b>B-2(0.149) &gt; D-2(0.106)</b>로 뒤집힌다.
+        h는 집단 크기를 무시하고 φ는 반영하기 때문이다(housewares 59건 vs 나머지 608건).
+        <b>막대 길이로 근거의 우선순위를 읽는 표라면 이건 치명적이다.</b></dd>
+    <dt>다중비교 보정</dt>
+    <dd>검정을 <b>17번</b> 했다(19행 − B-4 측정불가 − A-4 기술통계). 진짜 효과가 없어도
+        <b>58.2%</b>(= 1 − 0.95¹⁷) 확률로 최소 한 건은 우연히 유의해진다. 그래서 —
+        <b>보정 없음 10건 → BH-FDR 10건 → Bonferroni(α = 0.05/17 = 0.0029) 8건</b>이 살아남는다.
+        탈락한 2건은 <b>D-1(p=0.0181) · D-2(p=0.0052)로 둘 다 품목 축</b>이다.
+        선별(B-1·B-2)·배송(A-1)·채널 계약률(C-1)은 어느 기준에서도 살아남는다.</dd>
+    <dt>그래서 품목은</dt>
+    <dd><b>수요 규모를 고르는 근거</b>로만 쓰고 활성화율을 올리는 레버로는 쓰지 않는다.
+        φ로 다시 재면 D-2(0.106)·D-3(0.040)이 선별 레버 B-1(0.374)·B-2(0.149)보다 확연히 작고,
+        Bonferroni에서도 먼저 탈락한다 — <b>두 근거가 같은 방향을 가리킨다.</b></dd>
+  </dl>`;
+
+/* ── 인터랙션 ── */
+document.querySelectorAll('#evFilters .chip[data-branch]').forEach(btn=>{
+  btn.onclick = ()=>{
+    const b = btn.dataset.branch;
+    if(fBranches.has(b)) fBranches.delete(b); else fBranches.add(b);
+    btn.setAttribute('aria-pressed', fBranches.has(b));
+    openRow = null; renderEvidence();
+  };
+});
+document.querySelector('#evFilters .chip[data-verdict]').onclick = (ev)=>{
+  fAdoptedOnly = !fAdoptedOnly;
+  ev.currentTarget.setAttribute('aria-pressed', fAdoptedOnly);
+  ev.currentTarget.textContent = fAdoptedOnly ? '채택된 것만' : '전부 보기';
+  openRow = null; renderEvidence();
+};
+document.getElementById('evReset').onclick = ()=>{
+  fBranches.clear(); fAdoptedOnly = true; openRow = null;
+  document.querySelectorAll('#evFilters .chip[data-branch]').forEach(b=>b.setAttribute('aria-pressed','false'));
+  const vb = document.querySelector('#evFilters .chip[data-verdict]');
+  vb.setAttribute('aria-pressed','true'); vb.textContent = '채택된 것만';
+  renderEvidence();
+};
+document.querySelectorAll('#scaleSeg button').forEach(btn=>{
+  btn.onclick = ()=>{
+    scale = btn.dataset.scale;
+    document.querySelectorAll('#scaleSeg button').forEach(b=>b.setAttribute('aria-pressed', b===btn));
+    renderEvidence();
+  };
+});
+
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=>renderEvidence());
+renderEvidence();
+</script>

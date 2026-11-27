@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>가설 트리 | Seller OS</title>
+<!-- 웹폰트는 렌더를 막지 않게 비동기로 — CDN이 막혀도 시스템 한글 폰트로 즉시 그려진다 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      media="print" onload="this.media='all'">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5F6F8;--card:#FFF;--border:#E6E2E2;--line:#C9C9D1;
+  --t1:#2B2B30;--t2:#4A4A52;--t3:#6A6A73;--t4:#8A8A94;
+  --c1:#7E2124;--c3:#C63B3F;
+  --navy:#31538F;--navy-l:#6E8CC4;--purple:#6E47A8;
+  --green:#1B7F49;--amber:#8A6100;
+  --green-bg:#E8F5EE;--red-bg:#FBEAE8;--amber-bg:#F6F0E2;--navy-bg:#EDF1F8;--grey-bg:#EFEFF1;
+  --font:'Pretendard','Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',system-ui,-apple-system,sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:15px;padding:24px 28px 46px}
+.wrap{max-width:1230px;margin:0 auto}
+
+/* 헤더 */
+.hd{background:var(--t1);color:#fff;border-radius:12px;padding:17px 22px;margin-bottom:9px}
+.hd h1{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.hd .sub{font-size:12.5px;color:rgba(255,255,255,.7);margin-top:5px;line-height:1.6}
+.hd .sub b{color:#fff}
+.scopebar{display:flex;gap:9px;margin-bottom:16px;flex-wrap:wrap}
+.sc{flex:1;min-width:260px;border-radius:9px;padding:10px 13px;font-size:11.5px;line-height:1.55;border:1px solid var(--border);background:var(--card)}
+.sc.in{border-left:3px solid var(--navy)}
+.sc.out{border-left:3px solid var(--t4);background:#FAFAFB;color:var(--t3)}
+.sc .h{font-size:11px;font-weight:800;letter-spacing:.04em;margin-bottom:4px}
+.sc.in .h{color:var(--navy)}
+.sc.out .h{color:var(--t4)}
+.sc b{color:var(--t1)}
+
+/* ── 트리 ── */
+.tree{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px 24px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05)}
+
+.t-root{display:inline-flex;flex-direction:column;background:var(--c1);color:#fff;border-radius:9px;
+  padding:11px 18px;position:relative;margin-left:2px}
+.t-root .q{font-size:15.5px;font-weight:800;letter-spacing:-.2px}
+.t-root .m{font-size:11.5px;color:rgba(255,255,255,.72);margin-top:3px}
+.t-root:after{content:'';position:absolute;left:24px;top:100%;width:1.5px;height:16px;background:var(--line)}
+
+/* 전제 (트리 위) */
+.premise{margin:14px 0 4px 26px;border-left:1.5px solid var(--line);padding-left:26px;position:relative}
+.premise:before{content:'';position:absolute;left:-1.5px;top:22px;width:26px;height:1.5px;background:var(--line)}
+.premise-box{background:var(--amber-bg);border:1px solid rgba(138,97,0,.22);border-radius:8px;padding:10px 14px}
+.premise-box .h{font-size:12px;font-weight:800;color:var(--amber);margin-bottom:5px}
+.premise-box .items{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.premise-box .it{font-size:11px;color:var(--t2);line-height:1.5}
+.premise-box .it b{display:block;color:var(--t1);font-size:11.5px;margin-bottom:1px}
+
+/* 레벨1 컨테이너 */
+.t-trunk{padding-top:2px;margin-left:26px}
+
+/* 자식 공통 커넥터 */
+.t-child{position:relative;padding-left:26px}
+.t-child:before{content:'';position:absolute;left:0;top:0;bottom:0;width:1.5px;background:var(--line)}
+.t-child:first-child:before{top:22px}
+.t-child:last-child:before{bottom:auto;height:22px}
+.t-child:only-child:before{display:none}
+.t-child:after{content:'';position:absolute;left:0;top:22px;width:26px;height:1.5px;background:var(--line)}
+
+/* 가지 (레벨1) */
+.branch{display:flex;align-items:flex-start;padding:9px 0 13px}
+.b-head{width:236px;flex-shrink:0;position:relative;padding-right:26px}
+.b-head:after{content:'';position:absolute;right:0;top:22px;width:26px;height:1.5px;background:var(--line)}
+.b-box{border-radius:9px;padding:10px 13px;border:1px solid var(--border);background:#FCFCFD;border-left-width:4px}
+.b-box.A{border-left-color:var(--green)}
+.b-box.B{border-left-color:var(--navy)}
+.b-box.C{border-left-color:var(--purple)}
+.b-box.D{border-left-color:var(--amber)}
+.b-box .letter{font-size:11px;font-weight:800;letter-spacing:.06em}
+.b-box.A .letter{color:var(--green)} .b-box.B .letter{color:var(--navy)}
+.b-box.C .letter{color:var(--purple)} .b-box.D .letter{color:var(--amber)}
+.b-box .t{font-size:14px;font-weight:800;line-height:1.3;margin-top:2px;letter-spacing:-.2px}
+.b-box .m{font-size:10.5px;color:var(--t3);margin-top:5px;line-height:1.5}
+.b-box .pop{font-size:10px;color:var(--t4);margin-top:4px;padding-top:4px;border-top:1px dashed var(--border)}
+
+/* 노드 (레벨2) */
+.b-nodes{flex:1;min-width:0}
+.node{display:flex;align-items:flex-start;gap:9px;background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:9px 12px;margin:5px 0}
+.node .id{font-size:10.5px;font-weight:800;color:var(--t4);width:30px;flex-shrink:0;padding-top:2px}
+.node .body{flex:1;min-width:0}
+.node .claim{font-size:13px;font-weight:700;line-height:1.35}
+.node .stat{font-size:11px;color:var(--t3);margin-top:3px;line-height:1.55;font-variant-numeric:tabular-nums}
+.node .stat b{color:var(--t2)}
+.node .imp{font-size:10.5px;color:var(--t4);margin-top:3px;line-height:1.5}
+.v{font-size:10px;font-weight:800;padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.v.accept{background:var(--green-bg);color:var(--green)}
+.v.reject{background:var(--red-bg);color:var(--c3)}
+.v.hold{background:var(--amber-bg);color:var(--amber)}
+.v.na{background:var(--grey-bg);color:var(--t4)}
+.v.warn{background:#F0EEF6;color:var(--purple)}
+.node.dim{background:#FBFBFC}
+.node.dim .claim{color:var(--t3);font-weight:600}
+
+/* 범위 밖 가지 */
+.branch.outscope .b-box{background:#F7F7F8;border-left-color:var(--t4);border-style:dashed}
+.branch.outscope .b-box .letter{color:var(--t4)}
+.branch.outscope .node{background:#FBFBFC;border-style:dashed}
+
+/* 수정 배지 */
+.fixnote{background:#EAF3FF;border:1px solid rgba(49,83,143,.25);border-radius:6px;padding:6px 10px;
+  font-size:10px;color:var(--navy);margin-top:6px;line-height:1.5}
+.fixnote b{color:var(--navy)}
+
+/* 하단 */
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:11px;color:var(--t3);
+  margin-top:16px;padding-top:13px;border-top:1px solid var(--border)}
+.legend .g{display:flex;align-items:center;gap:5px}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.foot{font-size:11px;color:var(--t4);line-height:1.7;margin-top:14px}
+.foot b{color:var(--t3)}
+@media (max-width:980px){
+  .branch{flex-direction:column}
+  .b-head{width:100%;padding-right:0;margin-bottom:8px}
+  .b-head:after{display:none}
+  .premise-box .items{grid-template-columns:1fr 1fr}
+}
+
+/* ── 단계 네비게이션 (7단계 공통) ── */
+.stagenav{display:flex;align-items:stretch;gap:0;margin-bottom:13px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.sn{flex:1;min-width:104px;padding:9px 11px;font-size:11px;color:var(--t4);text-decoration:none;
+  border-right:1px solid var(--border);line-height:1.4;transition:background .12s}
+.sn:last-child{border-right:none}
+.sn:hover{background:#FAFAFB}
+.sn .num{display:block;font-size:10px;font-weight:800;letter-spacing:.04em;margin-bottom:2px}
+.sn .nm{display:block;font-size:11.5px;font-weight:600;color:var(--t3)}
+.sn.done .num{color:var(--green)} .sn.done .nm{color:var(--t2)}
+.sn.cur{background:var(--t1);border-right-color:var(--t1)}
+.sn.cur .num{color:rgba(255,255,255,.7)} .sn.cur .nm{color:#fff;font-weight:800}
+.sn.todo{opacity:.55}
+.stagetag{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);
+  padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:800;letter-spacing:.03em;margin-bottom:7px}
+
+
+/* 좁은 화면에서 가로로 밀리지 않게 */
+*,*:before,*:after{min-width:0}
+.wide,.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media (max-width:720px){body{padding:14px 12px 32px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="stagenav">
+  <a class="sn done" href="step0_eda.html"><span class="num">EDA</span><span class="nm">데이터 탐색</span></a>
+  <a class="sn cur" href="step1_hypothesis_tree.html"><span class="num">1단계</span><span class="nm">가설 트리</span></a>
+  <a class="sn done" href="step2_metric_map.html"><span class="num">2단계</span><span class="nm">지표 지도 (AARRR)</span></a>
+  <a class="sn done" href="step3_logic_tree.html"><span class="num">3단계</span><span class="nm">원인 분해 (로직·이슈 트리)</span></a>
+  <a class="sn done" href="step4_statistical_verification.html"><span class="num">4·5단계</span><span class="nm">통계 검증 · 머신러닝</span></a>
+  <a class="sn done" href="step6_conclusion.html"><span class="num">6단계</span><span class="nm">결론 · 액션 제안</span></a>
+  <a class="sn done" href="step7_dashboard.html"><span class="num">7단계</span><span class="nm">대시보드</span></a>
+  </div>
+
+
+  <div class="hd">
+    <div class="stagetag">1단계 산출물 · 가설 트리 (7단계 중 1)</div>
+    <h1>가설 트리 — 퍼널 경로 셀러의 활성화를 무엇이 가르는가</h1>
+    <div class="sub">
+      성공 기준은 계약 건수가 아니라 <b>계약 후 90일 내 첫 판매를 낸 셀러 수(활성화)</b>다 ·
+      가지는 작성 순서가 아니라 <b>증거 강도순</b>(A→D) · 판정 <b>채택 9 · 부분채택 1 · 판정보류 1 · 기각 5 · 측정불가 1 · 주의 2</b> (본 가지 19개) + 범위 밖 4개
+    </div>
+  </div>
+
+  <div class="scopebar">
+    <div class="sc in">
+      <div class="h">IN SCOPE — 이 트리가 답하는 것</div>
+      퍼널로 계약한 셀러의 <b>활성화율을 무엇이 가르는가</b> · 같은 리드 100건이면 <b>누구를 먼저 상담할지</b> ·
+      같은 셀러 1명을 <b>어느 품목·어느 지역</b>에 배치할지
+    </div>
+    <div class="sc out">
+      <div class="h">OUT OF SCOPE — 범위 밖 4경로 (크기만 남긴다)</div>
+      ① 리드 볼륨(월 200~1,352건) · ② 리텐션(3개월 54.6%) · ③ 퍼널 밖 유입 <b>2,715명(87.7%)</b> ·
+      ④ 이탈 셀러 <b>1,273명</b>(신규 목표의 30배)
+    </div>
+  </div>
+
+  <div class="tree">
+
+    <div class="t-root">
+      <div class="q">퍼널 경로 셀러의 90일 활성화율(44.1%)을 무엇이 가르는가</div>
+      <div class="m">계약 842건 → 관측 90일 확보 667건 → 활성화 294건</div>
+    </div>
+
+    <!-- 전제 -->
+    <div class="premise">
+      <div class="premise-box">
+        <div class="h">전제 · 측정 규약 — 가지가 아니라 트리 위에 놓인다</div>
+        <div class="items">
+          <div class="it"><b>E-1 준비 구간 [채택]</b>중앙 44일 · p75 72일 · 즉시판매 0건 → 90일 창의 근거</div>
+          <div class="it"><b>E-2 절단 모형화 [채택]</b>필터 667건(44.08%) ≈ 생존분석 789건 KM 44.12% → 정의 무편향</div>
+          <div class="it"><b>E-3 온보딩 개입 [측정불가]</b>담당자 ID만 존재, 개입 이력 로그 없음</div>
+          <div class="it"><b>E-4 유치 ROI [측정불가]</b>비용·수수료율 없음 (GMV는 거래액이지 매출이 아니다)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="t-trunk">
+
+      <!-- A -->
+      <div class="t-child">
+        <div class="branch">
+          <div class="b-head">
+            <div class="b-box A">
+              <div class="letter">A · 증거 최강</div>
+              <div class="t">품질·배송이 유치의 상한을 정한다</div>
+              <div class="m">데려온 셀러가 정시 배송을 못 하면 평점이 무너지고 그 품목의 수요 자체가 훼손된다</div>
+              <div class="pop">모집단 P6 · 최근 6개월 주문 38,624건 · <b>근거를 생성</b>하는 가지 (D가 필터로 사용)</div>
+            </div>
+          </div>
+          <div class="b-nodes">
+            <div class="node"><div class="id">A-1</div><div class="body">
+              <div class="claim">정시 도착 실패가 평점을 무너뜨린다</div>
+              <div class="stat">정시 <b>4.328점</b>(35,288건) vs 지연 <b>2.752점</b>(3,336건) · 격차 <b>1.576점</b> · Mann-Whitney <b>p&lt;1e-300</b></div>
+              <div class="imp">이 데이터셋에서 가장 큰 효과크기 — 트리 배열을 바꾼 근거</div>
+            </div><span class="v accept">채택</span></div>
+            <div class="node"><div class="id">A-2</div><div class="body">
+              <div class="claim">품목별 평점이 유의하게 다르다</div>
+              <div class="stat">Kruskal-Wallis <b>H=299.6</b> (k=38) · <b>p=7.9e-43</b> · n=37,374</div>
+            </div><span class="v accept">채택</span></div>
+            <div class="node"><div class="id">A-3</div><div class="body">
+              <div class="claim">배송 소요일이 평점을 만든다</div>
+              <div class="stat">주문 단위 Spearman <b>ρ=−0.227</b>(p&lt;1e-300) · 카테고리 단위 <b>ρ=−0.674</b></div>
+            </div><span class="v accept">채택</span></div>
+            <div class="node"><div class="id">A-4</div><div class="body">
+              <div class="claim">동일 주(state) 배송이 소요일·평점을 가른다</div>
+              <div class="stat">housewares 5.98일/<b>4.296점</b> vs 12.08일/<b>4.106점</b> (동일 주 42.1%) · pet_shop 6.95일/4.296점 vs 12.30일/4.230점(39.3%)</div>
+              <div class="imp">"셀러 34명" → <b>"34명을 RJ·MG에서"</b>로 액션이 구체화되는 근거 (셀러 61%가 SP 집중)</div>
+            </div><span class="v accept">채택</span></div>
+            <div class="node"><div class="id">A-5</div><div class="body">
+              <div class="claim">초기 정시율이 좋은 셀러가 더 오래 활동한다</div>
+              <div class="stat">첫 30일 정시율 ↔ 활동 지속일 <b>ρ=+0.169</b>(p=2.4e-6, n=772) · 총 주문수와는 무관(ρ=+0.026)</div>
+              <div class="imp">"물량 많은 셀러가 늦게 보낸다"는 역방향 인과 가능 → 효과 작음으로 한정</div>
+            </div><span class="v hold">부분채택</span></div>
+            <div class="node dim"><div class="id">A-6</div><div class="body">
+              <div class="claim">A-1은 주문 단위에서만 성립한다</div>
+              <div class="stat">카테고리 평균끼리 비교하면 정시율↔평점 <b>ρ=0.248, p=0.133</b>(비유의) — 집계 수준을 바꿔 인용하면 안 된다</div>
+            </div><span class="v warn">주의</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="t-child">
+        <div class="branch">
+          <div class="b-head">
+            <div class="b-box B">
+              <div class="letter">B · 증거 강함</div>
+              <div class="t">활성화는 선별로 만든다</div>
+              <div class="m">유치 의사결정에 직접 적용되는 가장 강한 레버 — 같은 리드에서 누구를 먼저 상담할지</div>
+              <div class="pop">모집단 P3 · 활성화 판정 코호트 667건</div>
+            </div>
+          </div>
+          <div class="b-nodes">
+            <div class="node"><div class="id">B-1</div><div class="body">
+              <div class="claim">사업 규모(lead_type)가 활성화를 가른다</div>
+              <div class="stat">χ²=32.0(5) <b>p=5.9e-6</b> <b>V=0.222</b> n=651 · online_big <b>64.0%</b> ↔ offline <b>26.5%</b></div>
+              <div class="imp">online_top은 n=12로 순위 해석 유보 → 가지 전체는 부분채택으로 읽는다</div>
+            </div><span class="v accept">채택</span></div>
+            <div class="node"><div class="id">B-2</div><div class="body">
+              <div class="claim">사업 형태(business_type)가 활성화를 가른다</div>
+              <div class="stat">χ²=13.9(1) <b>p=1.9e-4</b> <b>V=0.145</b> n=658 · 유통 <b>49.2%</b>(459건) vs 제조 <b>33.2%</b>(199건)</div>
+            </div><span class="v accept">채택</span></div>
+            <div class="node"><div class="id">B-3</div><div class="body">
+              <div class="claim">SR이 부여한 성향 라벨이 활성화를 예측한다</div>
+              <div class="stat">이진 χ²=1.85(3) <b>p=0.605</b> V=0.061 · log-rank χ²=1.74(3) <b>p=0.628</b> · 로지스틱 회귀 추가 시 AUC <b>−0.008</b></div>
+              <div class="imp">세 방법(카이제곱·log-rank·ML) 모두 일치 → '검정력 부족'이 아니라 <b>효과 없음</b>. 선별 기준으로 쓰지 않는다</div>
+              <div class="fixnote"><b>4·5단계 반영:</b> ML(로지스틱 회귀)까지 3번째 방법으로 재확인 완료 — <a href="step4_statistical_verification.html#ml">4·5단계 §5 머신러닝</a> 참고</div>
+            </div><span class="v reject">기각</span></div>
+            <div class="node"><div class="id">B-4</div><div class="body">
+              <div class="claim">셀러 자기신고 항목이 활성화를 예측한다</div>
+              <div class="stat">결측 <b>91.8~92.5%</b> · declared_monthly_revenue는 결측 0%인데 <b>94.7%가 값 0</b>(위장된 결측)</div>
+            </div><span class="v na">측정불가</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div class="t-child">
+        <div class="branch">
+          <div class="b-head">
+            <div class="b-box C">
+              <div class="letter">C · 단계 한정</div>
+              <div class="t">채널은 계약까지만 가른다</div>
+              <div class="m">채널 최적화의 목표는 '계약 확보'로 한정하고, 활성화 목표를 채널에 걸지 않는다</div>
+              <div class="pop">모집단 P1 리드 8,000건 / P3 코호트 · 전체 계약률 10.53%</div>
+            </div>
+          </div>
+          <div class="b-nodes">
+            <div class="node"><div class="id">C-1</div><div class="body">
+              <div class="claim">채널이 계약률을 가른다</div>
+              <div class="stat">χ²=140.7(10) <b>p=3.0e-25</b> <b>V=0.133</b> n=8,000 · 리드→계약 median 14일(우측 절단 없음)</div>
+            </div><span class="v accept">채택</span></div>
+            <div class="node"><div class="id">C-2</div><div class="body">
+              <div class="claim">채널이 활성화율도 가른다</div>
+              <div class="stat">이진 χ²=8.69(4) <b>p=0.069</b> V=0.119 · log-rank χ²=8.95(5) <b>p=0.111</b> — 두 방법 모두 비유의</div>
+            </div><span class="v reject">기각</span></div>
+            <div class="node"><div class="id">C-3</div><div class="body">
+              <div class="claim">품목별로 유입 채널 편중이 있다</div>
+              <div class="stat">housewares <b>p=0.23</b> · pet_shop <b>p=0.28</b> — 전체 계약의 채널 구성과 차이 없음</div>
+              <div class="imp">품목 전용 채널 전략의 근거가 없다 → 채널은 전사 공통 효율로 고른다</div>
+            </div><span class="v reject">기각</span></div>
+            <div class="node dim"><div class="id">C-4</div><div class="body">
+              <div class="claim">origin='unknown' 1,099건의 계약률이 16.3%로 최고</div>
+              <div class="stat">기록 누락이 특정 채널에 편중된 결과일 수 있다 → 채널 순위의 기반·조달 계획에서 제외</div>
+            </div><span class="v warn">주의</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- D -->
+      <div class="t-child">
+        <div class="branch">
+          <div class="b-head">
+            <div class="b-box D">
+              <div class="letter">D · 증거 혼재</div>
+              <div class="t">품목은 활성화율이 아니라 '남은 수요'로 고른다</div>
+              <div class="m">갭은 "어디가 더 좋은가"의 예측 지표가 아니라 <b>"어디에 우선 배분할지"의 규칙</b>이다</div>
+              <div class="pop">모집단 P5 · 품목 40개(GMV 95.7%) · <b>A의 근거를 G2 필터로 사용</b>하는 가지</div>
+            </div>
+          </div>
+          <div class="b-nodes">
+            <div class="node"><div class="id">D-1</div><div class="body">
+              <div class="claim">품목 세그먼트별 활성화 <u>속도</u>가 다르다</div>
+              <div class="stat">log-rank <b>χ²=25.8(13) p=0.0181</b> n=788(소표본 <b>병합</b> 방식, 표준) · 필터 방식 χ²=27.4(14) p=0.0172 n=661(민감도, 128건 제외)</div>
+              <div class="imp">90일 이진 컷오프가 시간 정보를 버린다 → log-rank를 주 검정으로 삼는다 · 두 처리 방식 모두 p&lt;0.05로 결론 불변</div>
+              <div class="fixnote"><b>4단계 교차검증 반영:</b> 우리 팀 수치(필터, n=661)와 초기 협업본 수치(병합, n=788)의 불일치는 표본 처리 방식 차이였음을 확인 — 병합 방식을 표준으로 통일 (<a href="step4_statistical_verification.html">4단계 §1</a>)</div>
+            </div><span class="v accept">채택</span></div>
+            <div class="node"><div class="id">D-2</div><div class="body">
+              <div class="claim">housewares는 평균보다 유의하게 높다</div>
+              <div class="stat"><b>61.0%</b>(36/59) · binomial <b>p=0.0052</b>(자신 제외 평균 42.4% 기준) · h=+0.341 · CI[48.3, 72.4]</div>
+            </div><span class="v accept">채택</span></div>
+            <div class="node"><div class="id">D-3</div><div class="body">
+              <div class="claim">pet_shop도 평균을 상회한다</div>
+              <div class="stat">53.8%(14/26) <b>p=0.330</b> CI[35.5, 71.2] ← <b>평균을 포함</b></div>
+              <div class="imp">단 G2 임계값 36개 조합 <b>전부에서 생존(36/36)</b> — housewares(27/36)와 남은 근거의 성격이 다르다 · <b>채택 근거는 활성화율이 아니라 성장 갭(+0.37)에 둔다</b></div>
+            </div><span class="v hold">판정보류</span></div>
+            <div class="node"><div class="id">D-4</div><div class="body">
+              <div class="claim">갭&gt;0 품목의 셀러가 더 잘 활성화된다</div>
+              <div class="stat">G1군 47.4%(192건) vs 비G1군 44.5%(321건) · χ²=0.29(1) <b>p=0.593</b> <b>V=0.024</b></div>
+              <div class="imp"><b>품목 선정과 활성화는 독립된 문제다.</b> 갭 파생 추론 3건(활성화·신규셀러 성과·공급압박 기제) 모두 null</div>
+            </div><span class="v reject">기각</span></div>
+            <div class="node"><div class="id">D-5</div><div class="body">
+              <div class="claim">셀러 1인당 매출이 높은 품목이 공급 부족 품목이다</div>
+              <div class="stat">Spearman: 1인당매출↔셀러수 <b>+0.13</b> · 셀러수↔상위1점유 <b>−0.83</b> · 1인당매출↔성장률 <b>−0.33</b></div>
+              <div class="imp">공급 희소성이 아니라 <b>소수 판매자가 자리잡은 성숙·독점 시장</b>을 지목하는 지표였다</div>
+            </div><span class="v reject">기각</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 범위 밖 -->
+      <div class="t-child">
+        <div class="branch outscope">
+          <div class="b-head">
+            <div class="b-box">
+              <div class="letter">범위 밖</div>
+              <div class="t">활성 셀러를 늘리는 다른 4경로</div>
+              <div class="m">CE(전체 포괄)를 억지로 주장하지 않고 <b>크기만 계산해 후속 과제로</b> 남긴다</div>
+              <div class="pop">③은 유입 경로 데이터 자체가 없어 이 데이터셋으로는 채울 수 없다</div>
+            </div>
+          </div>
+          <div class="b-nodes">
+            <div class="node dim"><div class="id">①</div><div class="body">
+              <div class="claim">리드 볼륨을 늘린다</div>
+              <div class="stat">월 <b>200~1,352건</b> 변동 · 계약률 10.53% 유지 시 리드 2배 = 계약 2배 · <b>예산 의사결정</b></div>
+            </div><span class="v na">범위 밖</span></div>
+            <div class="node dim"><div class="id">②</div><div class="body">
+              <div class="claim">활성화된 셀러를 유지한다 (리텐션)</div>
+              <div class="stat">첫 주문 후 1개월 63.4% → 3개월 <b>54.6%</b> · 절반 이탈 시 +34명의 실질은 ~19명 · <b>활성화 이후 단계</b></div>
+            </div><span class="v na">범위 밖</span></div>
+            <div class="node dim"><div class="id">③</div><div class="body">
+              <div class="claim">퍼널 밖 유입 경로를 최적화한다</div>
+              <div class="stat">판매 셀러 3,095명 중 퍼널 출신은 <b>380명(12.3%)</b> · 나머지 <b>2,715명(87.7%)</b>의 유입 경로 데이터 없음</div>
+            </div><span class="v na">측정불가</span></div>
+            <div class="node dim"><div class="id">④</div><div class="body">
+              <div class="claim">이탈 셀러를 되돌린다 (win-back)</div>
+              <div class="stat">최근 90일 판매 없음 <b>1,273명</b> · 누적 GMV <b>R$2.04M</b> · 신규 목표(+43명)의 <b>30배 규모</b></div>
+            </div><span class="v na">범위 밖</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /t-trunk -->
+
+    <div class="legend">
+      <span class="g"><span class="dot" style="background:#1B7F49"></span>채택 9</span>
+      <span class="g"><span class="dot" style="background:#8A6100"></span>부분채택 1 · 판정보류 1</span>
+      <span class="g"><span class="dot" style="background:#C63B3F"></span>기각 5</span>
+      <span class="g"><span class="dot" style="background:#8A8A94"></span>측정불가 1 · 범위 밖 4</span>
+      <span class="g"><span class="dot" style="background:#6E47A8"></span>주의 2</span>
+      <span class="g" style="margin-left:auto">가지 색: <b style="color:#1B7F49">A 품질</b> ·
+        <b style="color:#31538F">B 선별</b> · <b style="color:#6E47A8">C 유입</b> · <b style="color:#8A6100">D 품목</b></span>
+    </div>
+
+    <div class="foot">
+      <b>ME(상호 배타) 확인</b>: origin × lead_type χ²=18.67(20) <b>p=0.543</b> V=0.079 · origin × business_type χ²=1.72(4) <b>p=0.787</b> V=0.048
+      → 선별(B)과 채널(C)이 교락되지 않는다. 구조 이슈 2건은 <b>E를 전제로 분리</b>, <b>A=근거 생성 / D=근거 사용</b>으로 역할 명시해 해소.<br>
+      <b>분모 규율</b>: 계약률(분모=리드 8,000)과 활성화율(분모=코호트 667)을 곱하지 않는다 — 종단 전환율은 직접 계산(organic 3.70% vs paid 5.11% = 1.38배).<br>
+      <b>재현</b>: 06_hypothesis_tree_verification.ipynb (14/14) · 07_definition_audit.ipynb (정의 감사 17건) · <a href="step4_statistical_verification.html">4단계 통계 검증</a>에서 D-1 병합/필터 방식 교차검증 완료 · 기준일 2018-08-31
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
